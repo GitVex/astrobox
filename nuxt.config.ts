@@ -1,6 +1,6 @@
 // Astrobox as a Nuxt layer.
-// In an app:  export default defineNuxtConfig({ extends: ['github:YOUR-USER/astrobox#v1.0.0'] })
-// or, after `npm install github:YOUR-USER/astrobox#v1.0.0`:  extends: ['astrobox']
+// In an app:  export default defineNuxtConfig({ extends: ['github:GitVex/astrobox#v1.0.0'] })
+// or, after `npm install github:GitVex/astrobox#v1.0.0`:  extends: ['astrobox']
 import { fileURLToPath } from 'node:url'
 
 const here = (p: string) => fileURLToPath(new URL(p, import.meta.url))
