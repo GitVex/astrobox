@@ -1,0 +1,1580 @@
+<title>Astrobox</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>@layer reset, astrobox;</style>
+<link rel="stylesheet" href="../assets/astrobox.tokens.css">
+<link rel="stylesheet" href="../assets/astrobox.css">
+<style>
+/* Library page only. Components and tokens come from the package (../assets).
+   Base resets sit in the lowest layer so they never override a component. */
+@layer reset{
+*{box-sizing:border-box}
+button,input,select,textarea{font:inherit;color:inherit;border-radius:0}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+h1,h2,h3,h4{margin:0;text-wrap:balance;font-weight:600}
+p{margin:0 0 10px;max-width:66ch}
+code{font:12.5px var(--fm);background:var(--panel2);border:1px solid var(--ln2);padding:0 5px}
+}
+:root[data-palette="rev1"]:not(#_){--bg:#0b0f14;--grid:#121921;--panel:#0f151c;--panel2:#131b24;--hov:#16202b;--ln:#6f7a87;--ln2:#212a35;--txt:#ebe5d6;--dim:#8d96a3;--faint:#566170;--brass:#d3b777;--brass-txt:#d3b777;--on-brass:#14110a;--pc:#d3b777;--jade:#8fc7ba;--ember:#e3a857;--oxide:#dc8c76;--iris:#b7ace5;--orb:rgba(211,183,119,.42);--orb2:rgba(143,199,186,.32);--orbf:rgba(211,183,119,.18);--planet-hi:#f3e1ae;--planet-lo:#4a3c1c;--bar:#d6d9de;--flash:rgba(211,183,119,.12);color-scheme:dark}
+@media (prefers-color-scheme:light){
+ :root[data-palette="rev1"]:not(#_):not([data-theme="dark"]){--bg:#e7eaed;--grid:#dde2e7;--panel:#f7f8f9;--panel2:#eff1f3;--hov:#eceff2;--ln:#14181e;--ln2:#c4cbd3;--txt:#12161c;--dim:#58606c;--faint:#8c949f;--brass:#c09a4a;--brass-txt:#7a5c1c;--on-brass:#12161c;--pc:#a8812f;--jade:#2c7a6a;--ember:#9c650a;--oxide:#b04e2c;--iris:#5e50ad;--orb:rgba(122,92,28,.42);--orb2:rgba(44,122,106,.34);--orbf:rgba(122,92,28,.16);--planet-hi:#ecd497;--planet-lo:#7a6130;--bar:#14181e;--flash:rgba(192,154,74,.16);color-scheme:light}
+}
+:root[data-palette="rev1"][data-theme="light"]:not(#_){--bg:#e7eaed;--grid:#dde2e7;--panel:#f7f8f9;--panel2:#eff1f3;--hov:#eceff2;--ln:#14181e;--ln2:#c4cbd3;--txt:#12161c;--dim:#58606c;--faint:#8c949f;--brass:#c09a4a;--brass-txt:#7a5c1c;--on-brass:#12161c;--pc:#a8812f;--jade:#2c7a6a;--ember:#9c650a;--oxide:#b04e2c;--iris:#5e50ad;--orb:rgba(122,92,28,.42);--orb2:rgba(44,122,106,.34);--orbf:rgba(122,92,28,.16);--planet-hi:#ecd497;--planet-lo:#7a6130;--bar:#14181e;--flash:rgba(192,154,74,.16);color-scheme:light}
+.xf.mrs::before,.xf.mrs::after,.xf.mrs>.pl,.mrs>.pl{animation:none}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.55 var(--fb);
+ background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:56px 56px;background-attachment:fixed}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.top{border-top:1px solid var(--brass)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px;flex-wrap:wrap;border-bottom:1px solid var(--ln2)}
+.brand{display:flex;align-items:center;gap:12px;font:600 13px var(--fm);letter-spacing:.28em}
+.brand span{color:var(--dim);font-weight:400}
+.top .mid{font:11px var(--fm);letter-spacing:.18em;color:var(--dim);text-transform:uppercase}
+.hero{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.3fr);gap:28px 40px;align-items:center;padding-block:40px 6px}
+.hero h1{font:600 clamp(54px,9vw,104px)/.92 var(--fb);letter-spacing:-.045em;margin:14px 0 18px}
+.hero h1 em{font:italic 500 1.04em/1 var(--fd);letter-spacing:-.02em;color:var(--brass-txt)}
+.hero p{font-size:16.5px;color:var(--dim)}
+.hero p b{color:var(--txt);font-weight:500}
+.eyebrow{display:flex;align-items:center;gap:12px}
+.eyebrow::before{content:'';width:34px;border-top:1px solid var(--brass)}
+.cta{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center;margin-top:22px}
+.plate{min-width:0}
+.plate .cb{aspect-ratio:640/440;max-width:100%}
+.plate svg.halo{position:absolute;inset:0;width:100%;height:100%}
+.ov.bl .serif{display:block;font:400 26px/1.1 var(--fd);letter-spacing:0;text-transform:none;color:var(--txt);margin-top:3px}
+nav.idx{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--ln2);margin-top:26px}
+nav.idx .wrap{display:flex;overflow-x:auto;scrollbar-width:none;align-items:stretch}
+nav.idx a{flex:none;display:flex;gap:8px;align-items:baseline;padding:12px 13px 10px;font:500 11px var(--fm);letter-spacing:.12em;text-transform:uppercase;color:var(--dim);text-decoration:none;border-bottom:2px solid transparent;transition:color var(--t-swap),border-color var(--t-settle)}
+nav.idx a i{font-style:normal;color:var(--faint)}
+nav.idx a:hover{color:var(--txt)}
+nav.idx a.on{color:var(--txt);border-bottom-color:var(--brass)}
+nav.idx a.on i{color:var(--brass-txt)}
+section.s{padding-block:52px 4px;scroll-margin-top:50px}
+.sh{display:grid;grid-template-columns:4.2em minmax(0,1fr) auto;gap:4px 12px;align-items:baseline;padding-bottom:12px;border-bottom:1px solid var(--ln2)}
+.sh .n{font:500 12px var(--fm);color:var(--brass-txt)}
+.sh h2{font:600 30px/1.1 var(--fb);letter-spacing:-.025em}
+.sh p{grid-column:2/-1;margin:4px 0 0;color:var(--dim)}
+.lib{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--ln2)}
+.el{background:var(--panel);padding:20px 20px 22px;min-width:0;display:flex;flex-direction:column;gap:14px}
+.el.w{grid-column:1/-1}
+.el-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.el-h .lbl:first-child{color:var(--txt)}
+.el-h .code{font:500 10.5px var(--fm);letter-spacing:.14em;color:var(--brass-txt)}
+.el h3{font:500 21px/1.2 var(--fd);letter-spacing:-.005em}
+.el .desc{font-size:13.5px;color:var(--dim);margin:-6px 0 0}
+.demo{display:flex;flex-direction:column;gap:12px;min-width:0}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.sw{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:1px;background:var(--ln2);border:1px solid var(--ln2)}
+fieldset.pal{border:0;margin:0;padding:0;min-width:0;display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+.palrow>.seg{min-width:0}
+fieldset.pal:disabled{opacity:.4}
+.palrow{display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center}
+.swc{display:flex;flex-direction:column}
+.swi{display:block;position:relative;cursor:pointer}
+.swi input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;border:0;padding:0}
+.swi:focus-within i{outline:2px solid var(--brass);outline-offset:2px}
+.swc.ed .swi i{box-shadow:inset 0 0 0 1px var(--ln)}
+.swc .hx{font:10.5px var(--fm);color:var(--faint);margin-top:5px;text-transform:uppercase;letter-spacing:.04em}
+.tagrow{display:flex;justify-content:space-between;align-items:center;gap:6px;margin-top:auto;padding-top:6px}
+.swc .tag{font:500 9.5px var(--fm);letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.swc .tag.set{color:var(--brass-txt)}
+.swc .rs{background:none;border:0;padding:0;font:500 9.5px var(--fm);letter-spacing:.12em;text-transform:uppercase;color:var(--brass-txt);cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.sw>div{background:var(--panel);padding:10px;min-width:0}
+.sw i{display:block;height:46px;border:1px solid var(--ln2);margin-bottom:9px}
+.sw b{display:block;font:500 12px var(--fm)}
+.sw small{display:block;font:11px/1.4 var(--fm);color:var(--dim)}
+.reg{display:grid;gap:14px}
+.reg>div{display:grid;grid-template-columns:7.5em minmax(0,1fr);gap:12px;align-items:baseline;border-bottom:1px solid var(--ln2);padding-bottom:12px}
+.reg>div:last-child{border-bottom:0;padding-bottom:0}
+.reg .d{font:400 34px/1.05 var(--fd)}
+.reg .d em{color:var(--brass-txt)}
+.reg .i{font:600 20px/1.2 var(--fb);letter-spacing:-.01em}
+.reg .m{font:500 13px var(--fm);letter-spacing:.06em}
+.marks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px 18px}
+.mk{display:grid;gap:8px}
+.mk .box{height:70px;position:relative}
+.ocards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.fpanel .xf{margin-block:12px}
+.bplate{padding:28px 26px 24px;min-height:170px}
+.bplate h4{font:400 26px/1.1 var(--fd);margin:6px 0}
+.tabp{font-size:14px;color:var(--dim);min-height:44px}
+.toastz{position:relative;min-height:62px}
+.dlab{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:3px;font:10px var(--fm);color:var(--faint);letter-spacing:.06em}
+.dlab span.on{color:var(--brass-txt)}
+.fig{margin:6px 0 0}
+.fig .cb{height:120px}
+.fig figcaption{display:flex;justify-content:space-between;gap:10px;margin-top:8px;font:10px var(--fm);letter-spacing:.12em;text-transform:uppercase;color:var(--faint)}
+.bars{background:var(--bar);color:transparent;user-select:none;box-decoration-break:clone;-webkit-box-decoration-break:clone;padding:0 1px}
+.redx{display:grid;gap:10px}
+.redx>div{display:grid;grid-template-columns:6.4em minmax(0,1fr);gap:12px;align-items:baseline;font:400 15px/1.55 var(--fb)}
+.redx>div>span:first-child{font:500 10.5px var(--fm);letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+svg .h-grid{stroke:var(--ln2);stroke-width:1}
+svg .h-grid.v{stroke-dasharray:1 5}
+svg .h-o1{fill:none;stroke:var(--orb);stroke-width:1;stroke-dasharray:2 7}
+svg .h-o2{fill:none;stroke:var(--brass);stroke-opacity:.7;stroke-width:1.1;stroke-dasharray:5 6}
+svg .h-o3{fill:none;stroke:var(--orb2);stroke-width:1.2;stroke-dasharray:1 4}
+svg .h-halo{fill:none;stroke:var(--brass);stroke-opacity:.35;stroke-width:1;stroke-dasharray:1 3}
+svg .h-ring{fill:none;stroke:var(--brass);stroke-width:1.6}
+svg .h-star{fill:var(--txt)}
+svg .h-plus{stroke:var(--oxide);stroke-width:1.2}
+svg .h-sat{fill:var(--jade)}
+svg .h-sat2{fill:var(--txt)}
+svg .h-lbl{fill:var(--dim);font:500 9px var(--fm);letter-spacing:.14em}
+svg .h-lead{stroke:var(--ln);stroke-width:.8;stroke-opacity:.6}
+footer{padding-block:48px 64px}
+footer .wrap>div{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:1px solid var(--ln2);padding-top:16px}
+.ctr{padding:8px 12px;font-size:10.5px}
+.ctr:disabled{opacity:.4;cursor:not-allowed}
+.ctr[aria-pressed="true"]{border-color:var(--brass);color:var(--brass-txt);box-shadow:inset 0 -2px 0 var(--brass)}
+.mcards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.modes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.modes>div{display:grid;gap:4px;font-size:13px;color:var(--dim);border-top:1px solid var(--ln2);padding-top:10px}
+.modes b{font:500 10.5px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:var(--brass-txt)}
+.reseed{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:1100px){
+ .mcards,.modes{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:900px){
+ .reseed{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:600px){
+ .mcards,.modes{grid-template-columns:minmax(0,1fr)}
+}
+.rules{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--ln2);border:1px solid var(--ln2)}
+.rules>div{background:var(--panel);padding:14px 16px;font-size:13.5px;color:var(--dim);display:grid;gap:6px;align-content:start}
+.rules b{font:500 10.5px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:var(--brass-txt)}
+.moods{display:flex;flex-wrap:wrap;gap:12px;font:11px var(--fm);color:var(--dim)}
+.moods span{display:inline-flex;align-items:center;gap:6px}
+.moods i{width:9px;height:9px;display:inline-block}
+.rgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.oc.rv{min-height:118px;gap:4px;cursor:default;outline-offset:3px}
+.oc.rv h4{font-size:20px}
+.oc.rv .cap{margin-top:auto}
+@media (max-width:900px){
+ .rules{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:600px){
+ .rules{grid-template-columns:minmax(0,1fr)}
+}
+.vocab{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;background:var(--ln2);border:1px solid var(--ln2)}
+.vocab>div{background:var(--panel);padding:14px 14px 16px;display:flex;flex-direction:column;gap:5px;min-width:0}
+.vocab .spec{height:84px;display:flex;align-items:center;justify-content:center;margin-bottom:6px}
+.vocab b{font:500 18px var(--fd)}
+.vocab .m{font:500 10.5px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:var(--brass-txt)}
+.vocab small{font-size:13px;color:var(--dim);line-height:1.45}
+.vocab .q{margin-top:auto;padding-top:8px;font:italic 400 15px var(--fd);color:var(--txt)}
+.sp-xf{width:calc(100% - 28px);height:52px;margin:0}
+.sp-box{width:100%;max-width:150px;height:62px;min-height:0;padding:0}
+.sp-plain{border:1px solid var(--ln2);background:var(--panel2)}
+.sp-cells{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--ln2);border:1px solid var(--ln2);width:100%;max-width:150px}
+.sp-cells i{height:30px;background:var(--panel2)}
+.nest{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 24px}
+.lg{display:grid;gap:10px}
+.lg>div{display:grid;grid-template-columns:52px minmax(0,1fr);gap:12px;align-items:baseline;font-size:13.5px;color:var(--dim)}
+.lg b{display:block;font:500 10.5px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:var(--txt);margin-bottom:2px}
+.lg i{display:block;height:0;align-self:center}
+.lg .ls{border-top:1.5px solid var(--ln)}
+.lg .ld{border-top:1.5px dashed var(--ln)}
+.lg .lo{border-top:1.5px dotted var(--brass)}
+.lgx{display:grid;gap:10px;border-top:1px solid var(--ln2);padding-top:12px}
+@media (max-width:1000px){
+ .vocab{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (max-width:680px){
+ .vocab,.nest{grid-template-columns:minmax(0,1fr)}
+}
+.voices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+.screen{border:1px solid var(--ln2);background:var(--bg);padding:var(--v-pad) calc(var(--v-pad) + 6px) calc(var(--v-pad) + 8px);display:flex;flex-direction:column;gap:var(--v-pad);min-width:0}
+.screen .sbar{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--ln2);padding-bottom:8px}
+.screen[data-voice="prose"] p{margin:0;max-width:64ch}
+@media (max-width:900px){
+ .voices{grid-template-columns:minmax(0,1fr)}
+}
+.units .ul{font:400 21px var(--fd)}
+code.mk{background:none;border:0;padding:0;font-size:11.5px;color:var(--dim);white-space:normal;overflow-wrap:anywhere}
+.strules .q{font-size:14px}
+.empties{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:start}
+.etable,#stalet{min-width:0}
+.etable .xr:not(.xhd){grid-template-columns:minmax(0,1fr)}
+.ldbox{border:1px solid var(--ln2);background:var(--panel2);padding:16px;min-height:150px;display:grid}
+.ldbox>*{grid-area:1/1}
+.ld-skel{display:grid;gap:10px;align-content:start}
+.sk-rows{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;margin-top:6px}
+.sk-rows .sk{height:46px}
+.sk-rows .sk:last-child{display:none}
+.ld-real{display:grid;gap:6px;align-content:start;transition:opacity var(--t-settle)}
+.ld-real h4{font:400 24px/1.1 var(--fd)}
+.ldbox[data-state="loading"] .ld-real,.ldbox[data-state="waiting"] .ld-real{opacity:0;visibility:hidden}
+.ldbox:not([data-state="loading"]) .ld-skel{display:none}
+.locks{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) minmax(0,1fr);gap:16px;align-items:start}
+.lk-text p{font-size:16px;line-height:1.75;margin:6px 0}
+@media (max-width:1000px){
+ .empties,.locks{grid-template-columns:minmax(0,1fr)}
+ .strules{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:600px){
+ .strules{grid-template-columns:minmax(0,1fr)}
+}
+.gkinds{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:1px;background:var(--ln2);border:1px solid var(--ln2)}
+.gkinds>div{background:var(--panel);padding:16px 12px 14px;display:grid;justify-items:center;gap:4px;text-align:center}
+.gkinds .glyph{margin-bottom:6px}
+.gkinds b{font:400 17px var(--fd)}
+.gkinds small{font:500 10px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.gwork{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:20px;align-items:start}
+.glab{display:grid;gap:14px}
+.gfields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px}
+.gsizes{display:flex;align-items:flex-end;gap:22px;flex-wrap:wrap;border:1px solid var(--ln2);background:var(--panel2);padding:18px 18px 12px}
+.gsizes>div{display:grid;justify-items:center;gap:8px}
+.gline{margin:0;font-size:16.5px;line-height:1.6}
+.gset{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--ln2);border:1px solid var(--ln2)}
+.gset>div{background:var(--panel);display:flex;gap:10px;align-items:center;padding:9px 11px;min-width:0}
+.gset b{display:block;font:400 16px/1.2 var(--fd);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gset small{display:block;font:10.5px var(--fm);color:var(--faint);letter-spacing:.04em}
+.gset span{min-width:0}
+@media (max-width:900px){
+ .gwork{grid-template-columns:minmax(0,1fr)}
+ .gkinds{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (max-width:520px){
+ .gkinds{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .gfields{grid-template-columns:minmax(0,1fr)}
+}
+.mspec{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--ln2);border:1px solid var(--ln2);font:inherit}
+.mspec .ms-cell{background:var(--panel);padding:14px 16px;display:grid;gap:10px;align-content:start;font:14px/1.5 var(--fb)}
+.ms-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.ms-h b{font:500 10.5px var(--fm);letter-spacing:.14em;text-transform:uppercase;color:var(--brass-txt)}
+.ms-box{height:86px;display:flex;align-items:center;justify-content:center;background:var(--panel2);border:1px solid var(--ln2);position:relative;overflow:hidden}
+.ms-xf{width:calc(100% - 44px);height:44px;margin:0}
+.ms-pop{position:relative;width:70px;height:44px;border:1px solid var(--ln2)}
+.ms-swap{display:grid;font-size:22px}
+.ms-swap>*{grid-area:1/1;text-align:center;transition:opacity var(--t-swap) var(--ease)}
+.ms-swap .b{opacity:0}
+.ms-swap.alt .a{opacity:0}
+.ms-swap.alt .b{opacity:1}
+.ms-num{font:400 34px var(--fd)}
+.ms-go{justify-self:start}
+.mrules{grid-template-columns:minmax(0,1fr)}
+.redm{display:grid;border:1px solid var(--ln2)}
+.redm>div{display:grid;grid-template-columns:7em minmax(0,1fr);gap:10px;padding:9px 12px;border-bottom:1px solid var(--ln2);align-items:baseline}
+.redm>div:last-child{border-bottom:0}
+.redm span{font:500 11px var(--fm);color:var(--brass-txt);letter-spacing:.06em}
+.redm b{font-weight:400;font-size:14px}
+.live{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:20px;align-items:start}
+.lvnote{display:grid;gap:12px}
+@media (max-width:900px){
+ .mspec{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .live{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:520px){
+ .mspec{grid-template-columns:minmax(0,1fr)}
+}
+.expcss{max-height:220px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px}
+#expcall{white-space:pre-wrap;overflow-wrap:anywhere}
+@media (max-width:900px){
+ .hero{grid-template-columns:minmax(0,1fr)}
+ .ocards{grid-template-columns:minmax(0,1fr)}
+ .sw{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media (max-width:680px){
+ .lib{grid-template-columns:minmax(0,1fr)}
+ .sw{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .sh{grid-template-columns:3em minmax(0,1fr)}
+ .sh>.lbl{grid-column:2}
+ .ov.tr,.ov.br{display:none}
+ .top .mid{display:none}
+ .marks{grid-template-columns:minmax(0,1fr)}
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+ <defs>
+  <radialGradient id="pg" cx="38%" cy="32%" r="75%">
+   <stop offset="0" style="stop-color:var(--planet-hi)"/>
+   <stop offset=".55" style="stop-color:var(--brass)"/>
+   <stop offset="1" style="stop-color:var(--planet-lo)"/>
+  </radialGradient>
+ </defs>
+</svg>
+
+<header class="top">
+ <div class="wrap">
+  <div class="brand">
+   <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true">
+    <rect x="7" y="7" width="16" height="16" fill="none" style="stroke:var(--txt)" stroke-width="1.2"/>
+    <ellipse cx="15" cy="15" rx="14" ry="5" transform="rotate(-24 15 15)" fill="none" style="stroke:var(--brass)" stroke-width="1" stroke-dasharray="2 2"/>
+    <circle cx="15" cy="15" r="2.6" style="fill:var(--brass)"/>
+   </svg>
+   ASTROBOX <span>ELEMENT LIBRARY</span>
+  </div>
+  <div class="mid">Datapad · Lore Lexicon · Rev 01</div>
+  <div class="row" style="gap:8px">
+  <div class="seg" id="theme" role="group" aria-label="Theme">
+   <span class="ind"></span>
+   <button type="button" data-t="" class="on">Auto</button><button type="button" data-t="dark">Night</button><button type="button" data-t="light">Day</button>
+  </div>
+  <button class="btn ctr" id="contrast" type="button" aria-pressed="false">Contrast +</button>
+  <button class="btn ctr" id="rev1" type="button" aria-pressed="false" title="Original lower-contrast colors, for comparison">Rev 01 colors</button>
+  </div>
+ </div>
+</header>
+
+<div class="wrap hero" id="top">
+ <div>
+  <div class="eyebrow lbl b">Interface atlas / merged system</div>
+  <h1>Astro<em>box.</em></h1>
+  <p><b>Command Deck's structure, ASTRA's sky.</b> Construction lines, plus marks and segmented bars carry the mechanics. Brass, a serif voice and dashed orbits carry the wonder. One set of elements serves both the Datapad's working screens and the Lexicon's reading pages.</p>
+  <div class="cta">
+   <a class="btn pri" href="#foundations" style="text-decoration:none">Browse elements&nbsp;&nbsp;↘</a>
+   <span class="lbl" id="countlbl">Elements</span>
+  </div>
+ </div>
+ <figure class="plate" style="margin:0">
+  <div class="cb">
+   <svg class="halo" viewBox="0 0 640 440" aria-hidden="true">
+    <g>
+     <line class="h-grid" x1="70" y1="96" x2="590" y2="96"/><line class="h-grid" x1="70" y1="152" x2="590" y2="152"/><line class="h-grid" x1="70" y1="208" x2="590" y2="208"/><line class="h-grid" x1="70" y1="264" x2="590" y2="264"/><line class="h-grid" x1="70" y1="320" x2="590" y2="320"/><line class="h-grid" x1="70" y1="376" x2="590" y2="376"/>
+     <line class="h-grid v" x1="150" y1="70" x2="150" y2="390"/><line class="h-grid v" x1="250" y1="70" x2="250" y2="390"/><line class="h-grid v" x1="350" y1="70" x2="350" y2="390"/><line class="h-grid v" x1="450" y1="70" x2="450" y2="390"/><line class="h-grid v" x1="550" y1="70" x2="550" y2="390"/>
+    </g>
+    <g transform="translate(330 226) rotate(-17)">
+     <ellipse class="h-o1 drift" rx="262" ry="96"/>
+     <ellipse class="h-o2 drift rev" rx="182" ry="66"/>
+     <ellipse class="h-o3 drift" rx="116" ry="42"/>
+     <path id="op1" d="M-182,0 a182,66 0 1,0 364,0 a182,66 0 1,0 -364,0" fill="none"/>
+     <path id="op3" d="M116,0 a116,42 0 1,1 -232,0 a116,42 0 1,1 232,0" fill="none"/>
+     <ellipse class="h-ring" rx="76" ry="19"/>
+     <circle class="h-halo drift" r="60"/>
+     <circle r="44" fill="url(#pg)"/>
+     <path class="h-ring" d="M-76,0 A76,19 0 0,0 76,0"/>
+     <circle class="h-sat" r="5"><animateMotion dur="46s" repeatCount="indefinite"><mpath href="#op1"/></animateMotion></circle>
+     <circle class="h-sat2" r="3"><animateMotion dur="21s" repeatCount="indefinite"><mpath href="#op3"/></animateMotion></circle>
+    </g>
+    <g>
+     <circle class="h-star" cx="508" cy="108" r="1.8"/><circle class="h-star" cx="182" cy="330" r="1.6"/><circle class="h-star" cx="456" cy="340" r="1.4"/><circle class="h-star" cx="232" cy="126" r="1.2"/><circle class="h-star" cx="566" cy="232" r="1.4"/>
+     <path class="h-plus" d="M118 132h14M125 125v14"/><path class="h-plus" d="M486 170h14M493 163v14"/><path class="h-plus" d="M552 352h14M559 345v14"/><path class="h-plus" d="M156 300h12M162 294v12"/>
+     <line class="h-lead" x1="500" y1="170" x2="540" y2="146"/><text class="h-lbl" x="544" y="144">HEX 0405</text>
+     <text class="h-lbl" x="96" y="88">DRILL ROUTE / 02</text>
+     <text class="h-lbl" x="168" y="292" text-anchor="end">BEACON</text>
+     <text class="h-lbl" x="430" y="300">ORBIT 03 · 1.6 AU</text>
+    </g>
+   </svg>
+   <div class="ov tl"><b>Plate 01</b> / Halo system</div>
+   <div class="ov tr">Vey Reach · <data class="u" data-kind="hex" value="0405">Hex 0405</data></div>
+   <div class="ov bl">Primary body / 03-C<span class="serif">Aster Vey</span></div>
+   <div class="ov br">Drill arc<b>27.4° ↗</b></div>
+  </div>
+ </figure>
+</div>
+
+<div class="wrap">
+ <section class="xf" aria-label="Library summary"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+  <div class="stats">
+   <div><span class="lbl">Elements</span><b id="nEl">33</b><span class="cap">across 12 groups</span></div>
+   <div><span class="lbl">Accent</span><b>1<small>+ 4 signals</small></b><span class="cap">brass · jade · ember · rose · iris</span></div>
+   <div><span class="lbl">Type registers</span><b>3</b><span class="cap">serif · grotesk · mono</span></div>
+   <div><span class="lbl">Themes</span><b>Night<small>+ day</small></b><span class="cap">standard and high contrast</span></div>
+  </div>
+ </section>
+</div>
+
+<nav class="idx" aria-label="Sections"><div class="wrap">
+ <a href="#foundations"><i>00</i>Foundations</a><a href="#frames"><i>01</i>Frames</a><a href="#glyphs"><i>02</i>Glyphs</a><a href="#controls"><i>03</i>Controls</a><a href="#progress"><i>04</i>Progress</a><a href="#tables"><i>05</i>Tables</a><a href="#prose"><i>06</i>Prose</a><a href="#readouts"><i>07</i>Readouts</a><a href="#units"><i>08</i>Units</a><a href="#states"><i>09</i>States</a><a href="#motion"><i>10</i>Motion</a><a href="#export"><i>11</i>Export</a>
+</div></nav>
+
+<main class="wrap">
+
+<!-- 00 FOUNDATIONS -->
+<section class="s" id="foundations">
+ <div class="sh"><span class="n">00 /</span><h2>Foundations</h2><span class="lbl">Tokens · type · marks · voices</span><p>Brass is the only accent. Every other hue is a signal and always travels with a word. Every screen speaks one of two voices.</p></div>
+ <div class="xf"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+  <div class="lib">
+   <div class="el w" data-code="FND—01">
+    <div class="el-h"><span class="lbl">Color tokens</span><span class="code">FND—01</span></div>
+    <h3>Pick an accent; the rest is derived</h3>
+    <p class="desc">Neutrals take the accent's opposite hue. Signals keep their meaning but match the accent's weight, and any signal that lands too close to the accent steps aside. Each theme and contrast mode gets its own lightness, so contrast holds whatever you pick. Click any editable swatch to override it.</p>
+    <fieldset class="pal" id="pal">
+     <legend class="lbl" style="padding:0;margin-bottom:10px">Accent preset</legend>
+     <div class="palrow">
+      <div class="seg" id="preset" role="group" aria-label="Accent preset"><span class="ind"></span><button type="button" data-c="#f5a524" class="on">Signal brass</button><button type="button" data-c="#ff6a33">Command orange</button><button type="button" data-c="#d3b777">ASTRA brass</button><button type="button" data-c="custom">Custom</button></div>
+      <button class="btn q" type="button" id="palreset">Reset palette</button>
+     </div>
+     <div class="sw" id="swgrid">
+     <div class="swc ed" data-k="acc"><label class="swi"><i style="background:var(--brass)" data-sw="acc"></i><input type="color" data-k="acc" aria-label="Accent color"></label><b>--brass</b><small>Accent: actions, focus, marks, orbits</small><span class="hx" data-v="--brass"></span><span class="tagrow"><span class="tag" data-tag="acc">Derived</span><button type="button" class="rs" data-k="acc" hidden>Auto</button></span></div>
+     <div class="swc"><i style="background:var(--brass-txt)"></i><b>--brass-txt</b><small>Accent as text, per theme</small><span class="hx" data-v="--brass-txt"></span><span class="tagrow"><span class="tag">From accent</span></span></div>
+     <div class="swc ed" data-k="tint"><label class="swi"><i style="background:var(--ln2)" data-sw="tint"></i><input type="color" data-k="tint" aria-label="Neutral tint"></label><b>Neutral tint</b><small>Hue of every grey</small><span class="hx" data-v="--ln2"></span><span class="tagrow"><span class="tag" data-tag="tint">Derived</span><button type="button" class="rs" data-k="tint" hidden>Auto</button></span></div>
+     <div class="swc"><i style="background:var(--bg)"></i><b>--bg</b><small>Ground, with survey grid</small><span class="hx" data-v="--bg"></span><span class="tagrow"><span class="tag">From tint</span></span></div>
+     <div class="swc"><i style="background:var(--panel)"></i><b>--panel</b><small>Frames and cells</small><span class="hx" data-v="--panel"></span><span class="tagrow"><span class="tag">From tint</span></span></div>
+     <div class="swc"><i style="background:var(--ln)"></i><b>--ln</b><small>Construction lines</small><span class="hx" data-v="--ln"></span><span class="tagrow"><span class="tag">From tint</span></span></div>
+     <div class="swc"><i style="background:var(--ln2)"></i><b>--ln2</b><small>Hairlines, segment gaps</small><span class="hx" data-v="--ln2"></span><span class="tagrow"><span class="tag">From tint</span></span></div>
+     <div class="swc"><i style="background:var(--txt)"></i><b>--txt</b><small>Body text</small><span class="hx" data-v="--txt"></span><span class="tagrow"><span class="tag">From tint</span></span></div>
+     <div class="swc ed" data-k="ok"><label class="swi"><i style="background:var(--jade)" data-sw="ok"></i><input type="color" data-k="ok" aria-label="Stable signal color"></label><b>--jade</b><small>Stable, valid, active</small><span class="hx" data-v="--jade"></span><span class="tagrow"><span class="tag" data-tag="ok">Derived</span><button type="button" class="rs" data-k="ok" hidden>Auto</button></span></div>
+     <div class="swc ed" data-k="warn"><label class="swi"><i style="background:var(--ember)" data-sw="warn"></i><input type="color" data-k="warn" aria-label="Warning signal color"></label><b>--ember</b><small>Low, strained, scrambled</small><span class="hx" data-v="--ember"></span><span class="tagrow"><span class="tag" data-tag="warn">Derived</span><button type="button" class="rs" data-k="warn" hidden>Auto</button></span></div>
+     <div class="swc ed" data-k="bad"><label class="swi"><i style="background:var(--oxide)" data-sw="bad"></i><input type="color" data-k="bad" aria-label="Damage signal color"></label><b>--oxide</b><small>Rose: damage, anomaly</small><span class="hx" data-v="--oxide"></span><span class="tagrow"><span class="tag" data-tag="bad">Derived</span><button type="button" class="rs" data-k="bad" hidden>Auto</button></span></div>
+     <div class="swc ed" data-k="pre"><label class="swi"><i style="background:var(--iris)" data-sw="pre"></i><input type="color" data-k="pre" aria-label="Predicted signal color"></label><b>--iris</b><small>Predicted or unverified</small><span class="hx" data-v="--iris"></span><span class="tagrow"><span class="tag" data-tag="pre">Derived</span><button type="button" class="rs" data-k="pre" hidden>Auto</button></span></div>
+     </div>
+    </fieldset>
+    <p class="exit" id="rev1note" hidden><b>Rev 01 colors on</b>The original palette is fixed, so the editor and contrast mode are paused. Turn it off in the header to go back.</p>
+   </div>
+   <div class="el" data-code="FND—02">
+    <div class="el-h"><span class="lbl">Type registers</span><span class="code">FND—02</span></div>
+    <h3>Serif for names and values, grotesk for reading and doing, mono for measuring</h3>
+    <div class="reg">
+     <div><span class="lbl">Noto Serif</span><span class="d">The drill keeps <em>its own</em> time.</span></div>
+     <div><span class="lbl">Space Grotesk</span><span class="i">Plot course, spin up, drill.</span></div>
+     <div><span class="lbl">IBM Plex Mono</span><span class="m">HEX 0405 · TL4 · 1.6 AU</span></div>
+    </div>
+    <p class="desc" style="margin:0">Both voices set running text in Space Grotesk: 16.5px on prose pages, 14.5px on mechanical screens. Noto Serif carries titles, values in readouts, pull quotes and the italic accent word, and nothing else. Labels and units are mono.</p>
+   </div>
+   <div class="el" data-code="FND—03">
+    <div class="el-h"><span class="lbl">Lines & marks</span><span class="code">FND—03</span></div>
+    <h3>Four ways to draw an edge</h3>
+    <div class="marks">
+     <div class="mk"><div class="box xf" style="margin:10px"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i></div><span class="cap">Cross-frame · structure</span></div>
+     <div class="mk"><div class="box cb" style="margin:10px 0"></div><span class="cap">Bracket · featured plate</span></div>
+     <div class="mk"><div class="box orbit" style="border:1px solid var(--ln2);margin:10px 0" data-orbit="0.85,0.15,0.9,0.5,-14,200;0.1,1.0,0.7,0.6,10"></div><span class="cap">Orbit · clipped dashes</span></div>
+     <div class="mk"><div class="box" style="margin:10px 0;display:grid;grid-template-columns:repeat(5,1fr);gap:3px;align-content:center"><i style="height:12px;background:var(--brass)"></i><i style="height:12px;background:var(--brass)"></i><i class="hatch" style="height:12px;outline:1px solid var(--brass);outline-offset:-1px"></i><i style="height:12px;background:var(--ln2)"></i><i style="height:12px;background:var(--ln2)"></i></div><span class="cap">Segments · done, next, open</span></div>
+    </div>
+   </div>
+   <div class="el w" data-code="FND—04">
+    <div class="el-h"><span class="lbl">Voices</span><span class="code">FND—04</span></div>
+    <h3>Every screen speaks mechanical or prose</h3>
+    <p class="desc">Set <code>data-voice</code> once, on the body of a screen. The other voice may appear only as an inset, inside a frame, one level deep. Labels and chips are shared and look the same in both.</p>
+    <div class="voices">
+     <div class="screen" data-voice="mechanical">
+      <div class="sbar"><span class="lbl">Datapad · Ship · mechanical</span><span class="chip c-warn">Strained</span></div>
+      <h4>Long Patience</h4>
+      <div class="kvm">
+       <div><span class="lbl">Hull</span><b>14<small>/20</small></b></div>
+       <div><span class="lbl">Strain</span><b>3<small>/10</small></b></div>
+       <div><span class="lbl">Drive</span><b>2</b></div>
+       <div><span class="lbl">Crew</span><b>5</b></div>
+      </div>
+      <div class="cells ok" style="--n:20" data-f="14" data-x="2"></div>
+      <div class="inset" data-voice="prose">
+       <span class="lbl">From the Lexicon · prose inset</span>
+       <p>A free merchant bought at auction in Vey Reach and refit twice since. The crew says she is slow to start and hard to stop.</p>
+       <a class="more" href="#prose">Read the entry →</a>
+      </div>
+      <div class="row"><button class="btn pri" type="button">Plot course</button><button class="btn" type="button">Log damage</button></div>
+     </div>
+     <div class="screen" data-voice="prose">
+      <div class="sbar"><span class="lbl">Lexicon · Ships · prose</span><span class="chip c-acc">Revealed</span></div>
+      <h4>The <em>Long Patience</em></h4>
+      <p>She was bought at auction in Vey Reach, the only bid on a hull nobody else wanted, and refit twice since. The crew says she is slow to start and hard to stop.</p>
+      <div class="xf inset-m" data-voice="mechanical"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+       <div class="xf-h"><span class="xf-t">Ship record · mechanical inset</span><a class="more" href="#tables">Open in Datapad →</a></div>
+       <div class="kv"><div><span class="lbl">Class</span><b>Frigate</b></div><div><span class="lbl">Drive</span><b>Spike-2</b></div><div><span class="lbl">Hull</span><b>14 / 20</b></div><div><span class="lbl">Crew</span><b>5</b></div></div>
+      </div>
+      <p>The second spike drive went in at Corvane, after the first one failed on jump 3. Nobody has asked where the replacement came from.</p>
+     </div>
+    </div>
+    <div class="scroll">
+     <div class="xf xt" style="--cols:minmax(8em,.7fr) minmax(0,1fr) minmax(0,1fr);margin-block:10px"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+      <div class="xr xhd"><div class="xc">Token</div><div class="xc">Mechanical</div><div class="xc">Prose</div></div>
+      <div class="xr"><div class="xc">Body</div><div class="xc">Space Grotesk 14.5 / 1.5</div><div class="xc">Space Grotesk 16.5 / 1.7, 64ch measure</div></div>
+      <div class="xr"><div class="xc">Headings</div><div class="xc">Grotesk 600, tight tracking</div><div class="xc">Noto Serif 400, mono section numbers</div></div>
+      <div class="xr"><div class="xc">Numbers</div><div class="xc">Tabular everywhere</div><div class="xc">Proportional in text, tabular in tables</div></div>
+      <div class="xr"><div class="xc">Density</div><div class="xc">Compact: 7px rows, 10px padding</div><div class="xc">Open: 12px rows, 18px padding</div></div>
+      <div class="xr"><div class="xc">Frames</div><div class="xc">Full-weight lines and plus marks</div><div class="xc">Hairline lines, smaller plus marks</div></div>
+      <div class="xr"><div class="xc">Orbits</div><div class="xc">Hidden unless <code>data-orbit-optin</code></div><div class="xc">Allowed under the orbit rules</div></div>
+      <div class="xr"><div class="xc">Inset</div><div class="xc">Prose inset: open spacing in a plain border</div><div class="xc">Mechanical inset: soft cross-frame</div></div>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- 01 FRAMES -->
+<section class="s" id="frames">
+ <div class="sh"><span class="n">01 /</span><h2>Frames</h2><span class="lbl">Vocabulary · orbit rules</span><p>Cross-frames hold systems, brackets mark attention, orbits give an entity its place in the sky, hairline cells hold peers. Orbits are rationed: the rules below say where they may appear and how apps talk to them.</p></div>
+ <div class="xf"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+  <div class="lib">
+   <div class="el w" data-code="FRM—05">
+    <div class="el-h"><span class="lbl">Orbit card</span><span class="code">FRM—05</span></div>
+    <h3>Dashes that run past the card edge</h3>
+    <p class="desc">Each card clips an ellipse larger than itself, so the orbit seems to continue outside. The card's text is hashed into a seed that sets the orbit's entry edge, size, tilt, second ring and satellite. The same text always draws the same orbit.</p>
+    <div class="ocards">
+     <article class="oc orbit" data-orbit="auto" data-entity="aster-vey" data-mood="revealed">
+      <span class="lbl b">World · 03-C</span><h4><span class="glyph" data-kind="world" data-seed="aster-vey" data-size="24" aria-hidden="true"></span>Aster Vey</h4><p>A flooded archive world. The tide covers the lower stacks twice a day.</p>
+      <div class="ft"><span class="chip c-ok">Revealed</span><span class="cap">Hex 0405</span></div>
+     </article>
+     <article class="oc orbit" data-orbit="auto" data-entity="quiet-ledger" data-mood="unverified">
+      <span class="lbl b">Faction · Rank 4</span><h4><span class="glyph" data-kind="faction" data-seed="quiet-ledger" data-size="24" aria-hidden="true"></span>The Quiet Ledger</h4><p>Archivists who trade in salvaged records and owe the crew a favor.</p>
+      <div class="ft"><span class="chip c-pre">Rumored</span><span class="cap">Vey Reach</span></div>
+     </article>
+     <article class="oc orbit" data-orbit="auto" data-entity="long-patience" data-mood="strained">
+      <span class="lbl b">Ship · Frigate</span><h4><span class="glyph" data-kind="ship" data-seed="long-patience" data-size="24" aria-hidden="true"></span>Long Patience</h4><p>The crew's free merchant, refit with a second spike drive and a survey bay.</p>
+      <div class="ft"><span class="chip c-warn">Strained</span><span class="cap">Hull 14 / 20</span></div>
+     </article>
+    </div>
+    <div class="reseed">
+     <div class="field"><label for="f-seed">Card title · type to re-seed the orbit</label><input class="inp" id="f-seed" value="Drill log, jump 7" maxlength="60"><div class="hint"><span>Seed · FNV-1a of the card text</span><span id="seedv" class="num"></span></div></div>
+     <article class="oc orbit" id="seedcard" data-orbit="auto"><span class="lbl b">Live preview</span><h4 id="seedt">Drill log, jump 7</h4><p>Same text, same orbit, on every device and every visit.</p></article>
+    </div>
+   </div>
+   <div class="el fpanel" data-code="FRM—06">
+    <div class="el-h"><span class="lbl">Cross-frame panel</span><span class="code">FRM—06</span></div>
+    <h3>Structure with construction lines</h3>
+    <div class="xf" style="margin-inline:10px"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+     <div class="xf-h"><span class="xf-t">Drive status</span><span class="cap">Spike Drive-2</span></div>
+     <div class="kv"><div><span class="lbl">Charge</span><b class="num">72%</b></div><div><span class="lbl">Next drill</span><b class="num">6 days</b></div></div>
+    </div>
+    <p class="desc" style="margin:0">Lines overshoot by 10px and draw in from the center on load. Use for any panel with a header row.</p>
+   </div>
+   <div class="el" data-code="FRM—07">
+    <div class="el-h"><span class="lbl">Bracket plate</span><span class="code">FRM—07</span></div>
+    <h3>One featured object per screen</h3>
+    <div class="cb bplate orbit" data-orbit="auto" data-mood="unverified">
+     <span class="lbl b">Plate 02 / Contact</span>
+     <h4>Signal at the third orbit</h4>
+     <span class="cap">Bearing 041 · 0.3 AU · unverified</span>
+    </div>
+    <p class="desc" style="margin:0">Brackets replace the full frame when the content is an object to look at rather than a structure to read.</p>
+   </div>
+   <div class="el w" data-code="FRM—08">
+    <div class="el-h"><span class="lbl">Frame vocabulary</span><span class="code">FRM—08</span></div>
+    <h3>Every edge says what kind of thing it holds</h3>
+    <p class="desc">Read the edge before the content. Five edges, five meanings, and each frame is used for its meaning only.</p>
+    <div class="vocab">
+     <div><div class="spec"><div class="xf sp-xf"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i></div></div><b>Cross-frame</b><span class="m">A system</span><small>Something you read or operate as a whole: panels with a header, tables, stat strips.</small><span class="q">Do you work it as one thing?</span></div>
+     <div><div class="spec"><div class="cb sp-box"></div></div><b>Brackets</b><span class="m">Attention</span><small>The featured object, or the current selection. One pair per screen.</small><span class="q">Is it the one thing to look at?</span></div>
+     <div><div class="spec"><div class="oc orbit sp-box" data-orbit="0.95,0.1,0.95,0.5,-16,200" data-mood="nominal"></div></div><b>Orbit card</b><span class="m">An entity</span><small>Something with an identity in the world: a world, faction, ship or person.</small><span class="q">Does it exist in the setting?</span></div>
+     <div><div class="spec"><div class="sp-cells"><i></i><i></i><i></i><i></i><i></i><i></i></div></div><b>Hairline cells</b><span class="m">Peers</span><small>Members of one set, divided by 1px gaps: swatches, ledger acts, option grids.</small><span class="q">Is it one of many alike?</span></div>
+     <div><div class="spec"><div class="sp-box sp-plain"></div></div><b>Plain border</b><span class="m">A container</span><small>Controls and neutral holders with no further meaning: inputs, plain media, toasts.</small><span class="q">None of the above?</span></div>
+    </div>
+    <div class="nest">
+     <div class="exit"><b>Nesting</b>Cross-frames nest one level deep: a table may sit inside a panel, and nothing goes deeper. Structure inside that uses hairline cells. <code>Astrobox.auditFrames()</code> warns about deeper nesting.</div>
+     <div class="exit"><b>Mixing</b>Brackets and orbits may sit inside a cross-frame. A cross-frame never sits inside an orbit card or a bracket.</div>
+    </div>
+   </div>
+   <div class="el" data-code="FRM—09">
+    <div class="el-h"><span class="lbl">Attention brackets</span><span class="code">FRM—09</span></div>
+    <h3>Brackets follow the selection</h3>
+    <div class="att" id="att" role="listbox" aria-label="Crew of the Long Patience" tabindex="0">
+     <span class="att-b" aria-hidden="true"></span>
+     <div class="att-i" role="option" aria-selected="true"><b><span class="glyph" data-kind="person" data-seed="rhee-calder" data-size="18" aria-hidden="true"></span>Rhee Calder</b><span>Captain</span></div>
+     <div class="att-i" role="option" aria-selected="false"><b><span class="glyph" data-kind="person" data-seed="sefa-okoro" data-size="18" aria-hidden="true"></span>Sefa Okoro</b><span>Pilot</span></div>
+     <div class="att-i" role="option" aria-selected="false"><b><span class="glyph" data-kind="person" data-seed="ines-vatt" data-size="18" aria-hidden="true"></span>Ines Vatt</b><span>Engineer</span></div>
+     <div class="att-i" role="option" aria-selected="false"><b><span class="glyph" data-kind="person" data-seed="dov-hale" data-size="18" aria-hidden="true"></span>Dov Hale</b><span>Medic</span></div>
+     <div class="att-i" role="option" aria-selected="false"><b><span class="glyph" data-kind="person" data-seed="pell" data-size="18" aria-hidden="true"></span>Pell</b><span>Navigator</span></div>
+     <div class="att-i" role="option" aria-selected="false"><b><span class="glyph" data-kind="person" data-seed="marrow" data-size="18" aria-hidden="true"></span>Marrow</b><span>Passenger</span></div>
+    </div>
+    <p class="desc" style="margin:0">Click a crew member, or focus the grid and use the arrow keys. A screen has one pair of brackets, so while something is selected the featured plate gives up its own.</p>
+   </div>
+   <div class="el" data-code="FRM—10">
+    <div class="el-h"><span class="lbl">Line grammar</span><span class="code">FRM—10</span></div>
+    <h3>Solid is confirmed, dashed is provisional</h3>
+    <div class="lg">
+     <div><i class="ls"></i><span><b>Solid</b>Structure and confirmed fact. Every divider, frame and underline by default.</span></div>
+     <div><i class="ld"></i><span><b>Dashed</b>Provisional: derived, estimated, unverified, hidden or draft.</span></div>
+     <div><i class="lo"></i><span><b>Dotted orbit</b>Illustration only. Orbits and survey grids never carry state.</span></div>
+    </div>
+    <div class="lgx">
+     <span class="cap">In use</span>
+     <div class="row"><span class="chip c-ok">Confirmed</span><span class="chip c-pre">Unverified</span><span class="chip hol c-dim">Hidden</span><span class="chip c-acc prov">Draft</span></div>
+     <p style="margin:0;font-size:14px">Population <b class="prov">≈ 40,000</b>, from one survey pass.</p>
+     <div class="hid">2 passages withheld</div>
+    </div>
+   </div>
+   <div class="el w" data-code="FRM—11">
+    <div class="el-h"><span class="lbl">Orbit rules</span><span class="code">FRM—11</span></div>
+    <h3>Where orbits may appear, and how many</h3>
+    <div class="rules">
+     <div><b>Allowed</b>Entity cards with an identity: worlds, factions, ships, people. The one featured object on a screen, such as a bracket plate, an image plate or the hero. Pull quotes on reading pages.</div>
+     <div><b>Never</b>Tables, forms, controls, navigation, toasts, lists and thumbnails. Nothing inside a cross-frame table: construction lines and orbits never share a surface.</div>
+     <div><b>Budget</b>One visible orbit field per viewport: a featured orbit or one row of entity cards, never both. At most two rings and one satellite per element.</div>
+     <div><b>Getting around the budget</b>Define orbits on as many elements as you like, but reveal them on hover or focus with <code>data-orbit-reveal="hover"</code>, so only one ever shows. Touch screens light the card nearest the middle of the screen.</div>
+     <div><b>Mechanical screens</b>Screens with <code>data-voice="mechanical"</code> hide orbits, unless an element opts in with <code>data-orbit-optin</code>. See Voices in Foundations.</div>
+     <div><b>Motion and meaning</b>Drift only, 40 to 90 seconds a loop and slower over images, with no hover-driven animation. Reduced motion stops it. Orbits are hidden from screen readers; mood is always also stated in words.</div>
+    </div>
+   </div>
+   <div class="el" data-code="FRM—12">
+    <div class="el-h"><span class="lbl">Orbit mood</span><span class="code">FRM—12</span></div>
+    <h3>One attribute sets the satellite and the orbit</h3>
+    <div class="seg" id="moodseg" role="group" aria-label="Mood"><span class="ind"></span><button type="button" data-m="neutral">Neutral</button><button type="button" data-m="nominal">Nominal</button><button type="button" data-m="strained" class="on">Strained</button><button type="button" data-m="damaged">Damaged</button><button type="button" data-m="unverified">Unverified</button><button type="button" data-m="hidden">Hidden</button></div>
+    <article class="oc orbit" id="moodcard" data-orbit="auto" data-mood="strained">
+     <span class="lbl b">Ship · Frigate</span><h4>Long Patience</h4><p>Second spike drive fitted at Corvane. Sick bay offline since jump 5.</p>
+     <div class="ft"><span class="chip c-warn" id="moodchip">Strained</span><span class="cap">data-mood</span></div>
+    </article>
+    <pre class="code"><span class="c">&lt;!-- the attribute is the interface --&gt;</span>
+&lt;article class="oc orbit" data-orbit="auto" <b>data-mood="damaged"</b>&gt;
+
+<span class="c">// from app code: set it, or call the helper</span>
+card.dataset.mood = 'nominal';
+Astrobox.setMood(card, 'nominal');  <span class="c">// also fires 'astro:mood'</span>
+
+<span class="c">// a mood outside the set: give it a colour</span>
+card.style.setProperty('--mood', '#6fb7ff');</pre>
+    <div class="moods">
+     <span><i style="background:var(--brass)"></i>neutral</span><span><i style="background:var(--jade)"></i>nominal</span><span><i style="background:var(--ember)"></i>strained</span><span><i style="background:var(--oxide)"></i>damaged</span><span><i style="background:var(--iris)"></i>unverified</span><span><i style="background:var(--faint)"></i>hidden</span>
+    </div>
+   </div>
+   <div class="el" data-code="FRM—13">
+    <div class="el-h"><span class="lbl">Hover reveal</span><span class="code">FRM—13</span></div>
+    <h3>Many orbits defined, one shown</h3>
+    <div class="rgrid">
+     <article class="oc rv orbit" tabindex="0" data-orbit="auto" data-orbit-reveal="hover" data-mood="nominal"><span class="lbl b">World</span><h4>Corvane</h4><span class="cap">Nominal</span></article>
+     <article class="oc rv orbit" tabindex="0" data-orbit="auto" data-orbit-reveal="hover" data-mood="damaged"><span class="lbl b">Station</span><h4>Halyard Ring</h4><span class="cap">Damaged</span></article>
+     <article class="oc rv orbit" tabindex="0" data-orbit="auto" data-orbit-reveal="hover" data-mood="unverified"><span class="lbl b">Contact</span><h4>Beacon 041</h4><span class="cap">Unverified</span></article>
+     <article class="oc rv orbit" tabindex="0" data-orbit="auto" data-orbit-reveal="hover" data-mood="neutral"><span class="lbl b">Person</span><h4>The keeper</h4><span class="cap">Neutral</span></article>
+    </div>
+    <p class="desc" style="margin:0">Point at a card, or tab to it. Each one keeps its seeded orbit and mood; only the active card shows it.</p>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- GLYPHS -->
+<section class="s" id="glyphs">
+ <div class="sh"><span class="n">02 /</span><h2>Glyphs</h2><span class="lbl">Identity marks for records</span><p>A small mark for every entity in the database, generated from its ID. Kind sets the shape, mood sets the colour.</p></div>
+ <div class="xf"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+  <div class="lib">
+   <div class="el w" data-code="GLY—14">
+    <div class="el-h"><span class="lbl">Kinds</span><span class="code">GLY—14</span></div>
+    <h3>Every record gets a mark of its own</h3>
+    <p class="desc">A glyph belongs to a record, not to a word: it appears only where the markup carries an entity's ID from the database, whatever its kind. Kind sets the core shape, the entity's ID seeds the orbit and satellite position, and <code>data-mood</code> colours the orbit and satellite while the core stays ink, so the kind always reads. The glyph shares its tilt with the entity's card orbit, and renaming an entity keeps its glyph.</p>
+    <div class="gkinds">
+     <div><span class="glyph" data-kind="world" data-seed="aster-vey" data-size="40"></span><b>World</b><small>Disc</small></div>
+     <div><span class="glyph" data-kind="ship" data-seed="long-patience" data-size="40"></span><b>Ship</b><small>Chevron</small></div>
+     <div><span class="glyph" data-kind="station" data-seed="halyard-ring" data-size="40"></span><b>Station</b><small>Square</small></div>
+     <div><span class="glyph" data-kind="person" data-seed="rhee-calder" data-size="40"></span><b>Person</b><small>Ring</small></div>
+     <div><span class="glyph" data-kind="faction" data-seed="quiet-ledger" data-size="40"></span><b>Faction</b><small>Hexagon</small></div>
+    </div>
+   </div>
+   <div class="el" data-code="GLY—15">
+    <div class="el-h"><span class="lbl">Glyph builder</span><span class="code">GLY—15</span></div>
+    <h3>One ID, four sizes</h3>
+     <div class="glab">
+      <div class="gfields">
+       <div class="field"><label for="g-id">Entity ID · seeds the glyph</label><input class="inp" id="g-id" value="long-patience" maxlength="40"></div>
+       <div class="field"><label for="g-name">Name · fallback seed</label><input class="inp" id="g-name" value="Long Patience" maxlength="40"></div>
+       <div class="field"><label for="g-kind">Kind</label><div class="selw"><select class="inp" id="g-kind"><option value="world">World</option><option value="ship" selected>Ship</option><option value="station">Station</option><option value="person">Person</option><option value="faction">Faction</option></select></div></div>
+       <div class="field"><label for="g-mood">Mood</label><div class="selw"><select class="inp" id="g-mood"><option value="">Neutral</option><option value="nominal">Nominal</option><option value="strained" selected>Strained</option><option value="damaged">Damaged</option><option value="unverified">Unverified</option><option value="hidden">Hidden</option></select></div></div>
+      </div>
+      <div class="gsizes" id="gsizes">
+       <div><span class="glyph" id="gp96" data-size="96"></span><span class="cap">96 · header</span></div>
+       <div><span class="glyph" id="gp40" data-size="40"></span><span class="cap">40 · card</span></div>
+       <div><span class="glyph" id="gp24" data-size="24"></span><span class="cap">24 · list</span></div>
+       <div><span class="glyph" id="gp16" data-size="16"></span><span class="cap">16 · inline</span></div>
+      </div>
+      <p class="gline">The <a class="rec" href="#glyphs"><span class="glyph" id="gpin" aria-hidden="true"></span> <span id="gpname">Long Patience</span></a> drilled out of <a class="rec" href="#glyphs"><span class="glyph" data-kind="world" data-seed="corvane" aria-hidden="true"></span> Corvane</a> with a hold full of salvage.</p>
+      <span class="cap" id="gseed"></span>
+     </div>
+   </div>
+   <div class="el" data-code="GLY—16">
+    <div class="el-h"><span class="lbl">Sample set</span><span class="code">GLY—16</span></div>
+    <h3>Records from the campaign</h3>
+     <div class="gset">
+       <div><span class="glyph" data-kind="world" data-seed="corvane" data-size="24" data-mood="nominal" aria-hidden="true"></span><span><b>Corvane</b><small>corvane</small></span></div>
+       <div><span class="glyph" data-kind="world" data-seed="aster-vey" data-size="24" aria-hidden="true"></span><span><b>Aster Vey</b><small>aster-vey</small></span></div>
+       <div><span class="glyph" data-kind="world" data-seed="vey-b" data-size="24" aria-hidden="true"></span><span><b>Vey-b</b><small>vey-b</small></span></div>
+       <div><span class="glyph" data-kind="ship" data-seed="long-patience" data-size="24" data-mood="strained" aria-hidden="true"></span><span><b>Long Patience</b><small>long-patience</small></span></div>
+       <div><span class="glyph" data-kind="ship" data-seed="quiet-tithe" data-size="24" aria-hidden="true"></span><span><b>Quiet Tithe</b><small>quiet-tithe</small></span></div>
+       <div><span class="glyph" data-kind="ship" data-seed="salt-runner" data-size="24" data-mood="damaged" aria-hidden="true"></span><span><b>Salt Runner</b><small>salt-runner</small></span></div>
+       <div><span class="glyph" data-kind="station" data-seed="halyard-ring" data-size="24" data-mood="damaged" aria-hidden="true"></span><span><b>Halyard Ring</b><small>halyard-ring</small></span></div>
+       <div><span class="glyph" data-kind="station" data-seed="beacon-041" data-size="24" data-mood="unverified" aria-hidden="true"></span><span><b>Beacon 041</b><small>beacon-041</small></span></div>
+       <div><span class="glyph" data-kind="person" data-seed="rhee-calder" data-size="24" aria-hidden="true"></span><span><b>Rhee Calder</b><small>rhee-calder</small></span></div>
+       <div><span class="glyph" data-kind="person" data-seed="ilsabet-marrow" data-size="24" aria-hidden="true"></span><span><b>The keeper</b><small>ilsabet-marrow</small></span></div>
+       <div><span class="glyph" data-kind="faction" data-seed="quiet-ledger" data-size="24" aria-hidden="true"></span><span><b>The Quiet Ledger</b><small>quiet-ledger</small></span></div>
+       <div><span class="glyph" data-kind="faction" data-seed="drill-wardens" data-size="24" data-mood="hidden" aria-hidden="true"></span><span><b>Drill Wardens</b><small>drill-wardens</small></span></div>
+     </div>
+   </div>
+   <div class="el w" data-code="GLY—17">
+    <div class="el-h"><span class="lbl">Records and placement</span><span class="code">GLY—17</span></div>
+    <h3>Where a glyph may appear</h3>
+    <div>
+    <div class="exit"><b>Records only</b>Never add glyphs by matching names in rendered text. A name that happens to match an entity stays plain; only markup that references the record, with <code>data-seed</code> set to its ID, gets a glyph.</div>
+    </div>
+    <div class="scroll">
+     <div class="xf xt" style="--cols:minmax(10em,.9fr) minmax(9.5em,.7fr) minmax(0,1.6fr);margin-block:10px"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+      <div class="xr xhd"><div class="xc">Context</div><div class="xc">Glyph</div><div class="xc">Rule</div></div>
+      <div class="xr"><div class="xc">Entity card header</div><div class="xc"><span class="chip c-ok">Yes · 24px</span></div><div class="xc">Only the card's own record, before the title. Exactly one.</div></div>
+      <div class="xr"><div class="xc">Entry header</div><div class="xc"><span class="chip c-ok">Yes · 96px</span></div><div class="xc">A standalone mark beside the title block, never inside the heading text.</div></div>
+      <div class="xr"><div class="xc">Hero lines, display headlines</div><div class="xc"><span class="chip hol c-dim">Never</span></div><div class="xc">Display type makes a statement; a glyph would turn it into a label.</div></div>
+      <div class="xr"><div class="xc">Section headings</div><div class="xc"><span class="chip hol c-dim">Never</span></div><div class="xc">Headings name topics, not records.</div></div>
+      <div class="xr"><div class="xc">Prose and mechanical text</div><div class="xc"><span class="chip c-ok">First linked mention · 16px</span></div><div class="xc">Only where the name links to its record. Once per record per article.</div></div>
+      <div class="xr"><div class="xc">Quotes, pull quotes</div><div class="xc"><span class="chip c-acc">Attribution only</span></div><div class="xc">Never inside the quote. The attribution line may carry the speaker's glyph.</div></div>
+      <div class="xr"><div class="xc">Lists, tables, crews, results</div><div class="xc"><span class="chip c-ok">Every row · 16–24px</span></div><div class="xc">In the name column, on every row or on none. A list that mixes records with plain items shows none.</div></div>
+      <div class="xr"><div class="xc">Image slots</div><div class="xc"><span class="chip c-acc">Fallback</span></div><div class="xc">Stands in when a record's picture is missing, labelled with the record's name.</div></div>
+      <div class="xr"><div class="xc">Toasts, notifications</div><div class="xc"><span class="chip c-ok">Subject · 16px</span></div><div class="xc">The record the message is about, at the start.</div></div>
+      <div class="xr"><div class="xc">Chips, buttons, labels, captions, footnotes, contents</div><div class="xc"><span class="chip hol c-dim">Never</span></div><div class="xc">These already carry state or structure.</div></div>
+      <div class="xr"><div class="xc">No access</div><div class="xc"><span class="chip hol c-dim">Never</span></div><div class="xc">A glyph seeded from the ID would let players link withheld mentions of the same record.</div></div>
+     </div>
+    </div>
+    <div class="exit"><b>Accessibility</b>Next to a name, a glyph is hidden from screen readers. Standing in for an image, it carries the record's name as its label.</div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- 02 CONTROLS -->
+<section class="s" id="controls">
+ <div class="sh"><span class="n">03 /</span><h2>Controls</h2><span class="lbl">12 primitives</span><p>Square, tactile and quiet. Brass fill is reserved for the single primary intention on a screen.</p></div>
+ <div class="xf"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+  <div class="lib">
+   <div class="el" data-code="CTL—18">
+    <div class="el-h"><span class="lbl">Buttons</span><span class="code">CTL—18</span></div>
+    <h3>One brass action, the rest unfilled</h3>
+    <div class="row"><button class="btn pri" type="button">Begin drill&nbsp;&nbsp;↗</button><button class="btn" type="button">Plot course</button><button class="btn q" type="button">Cancel</button></div>
+    <div class="row"><button class="btn danger" type="button">Jettison cargo</button><button class="btn" type="button" disabled style="opacity:.4;cursor:not-allowed">Drill locked</button></div>
+   </div>
+   <div class="el" data-code="CTL—19">
+    <div class="el-h"><span class="lbl">Instrument keys</span><span class="code">CTL—19</span></div>
+    <h3>Square keys for quick tools</h3>
+    <div class="keys" id="keys">
+     <button class="key" type="button" aria-pressed="true" aria-label="Locate">⌖</button><button class="key" type="button" aria-pressed="false" aria-label="Pin">☆</button><button class="key" type="button" aria-pressed="false" aria-label="Export">↗</button><button class="key" type="button" aria-pressed="false" aria-label="Reset">⟲</button><button class="key" type="button" aria-pressed="false" aria-label="Phase">◒</button>
+    </div>
+    <span class="cap">Locate / Pin / Export / Reset / Phase</span>
+   </div>
+   <div class="el" data-code="CTL—20">
+    <div class="el-h"><span class="lbl">Segmented control</span><span class="code">CTL—20</span></div>
+    <h3>A sliding brass indicator</h3>
+    <div class="seg" role="group" aria-label="Viewer"><span class="ind"></span><button type="button" class="on">GM</button><button type="button">Captain</button><button type="button">Pilot</button><button type="button">Engineer</button></div>
+    <span class="cap">Viewing as · switches visibility in place</span>
+   </div>
+   <div class="el" data-code="CTL—21">
+    <div class="el-h"><span class="lbl">Text input</span><span class="code">CTL—21</span></div>
+    <h3>A left edge that warms on focus</h3>
+    <div class="field"><label for="f-name">Entry title</label><input class="inp" id="f-name" placeholder="The drowned stacks of Aster Vey"><div class="hint"><span>ID assigned on save</span><span>Public</span></div></div>
+   </div>
+   <div class="el" data-code="CTL—22">
+    <div class="el-h"><span class="lbl">Select</span><span class="code">CTL—22</span></div>
+    <h3>Classify an entry</h3>
+    <div class="field"><label for="f-kind">Lexicon type</label><div class="selw"><select class="inp" id="f-kind"><option>World</option><option selected>Faction</option><option>Person</option><option>Ship</option><option>Artifact</option></select></div><div class="hint"><span>Faction · 18 entries</span></div></div>
+   </div>
+   <div class="el" data-code="CTL—23">
+    <div class="el-h"><span class="lbl">Note field</span><span class="code">CTL—23</span></div>
+    <h3>A margin for the unknown</h3>
+    <div class="field"><label for="f-note">Session note · private</label><textarea class="inp" id="f-note" maxlength="240" placeholder="What did the archivist leave out?"></textarea><div class="hint"><span id="f-cnt">0 / 240</span><span>Local draft</span></div></div>
+   </div>
+   <div class="el" data-code="CTL—24">
+    <div class="el-h"><span class="lbl">Checklist</span><span class="code">CTL—24</span></div>
+    <h3>Square apertures, real checkmarks</h3>
+    <div>
+     <label class="ck"><input type="checkbox" id="c1" checked><span class="box"></span>Stamp each note with the session number</label>
+     <label class="ck"><input type="checkbox" id="c2"><span class="box"></span>Include GM-only facets in the export</label>
+     <label class="ck"><input type="checkbox" id="c3" checked><span class="box"></span>Share with the crew after the session</label>
+    </div>
+   </div>
+   <div class="el" data-code="CTL—25">
+    <div class="el-h"><span class="lbl">Switch</span><span class="code">CTL—25</span></div>
+    <h3>A physical state with a word beside it</h3>
+    <div>
+     <label class="swt"><input type="checkbox" id="s1" checked><span class="tx"><b>Spoiler shield</b><small>Hide anything not yet revealed</small></span><span class="r"><span class="st">Active</span><span class="tr"></span></span></label>
+     <label class="swt"><input type="checkbox" id="s2"><span class="tx"><b>Drill chime</b><small>Sound when a drill completes</small></span><span class="r"><span class="st">Muted</span><span class="tr"></span></span></label>
+    </div>
+   </div>
+   <div class="el" data-code="CTL—26">
+    <div class="el-h"><span class="lbl">Slider</span><span class="code">CTL—26</span></div>
+    <h3>Calibrated track, sharp brass thumb</h3>
+    <div class="rng">
+     <div class="top2"><label class="lbl" for="r-gain">Sensor gain</label><span class="val num" id="r-out">68<small> / 100</small></span></div>
+     <input type="range" class="sl" id="r-gain" min="0" max="100" value="68">
+     <div class="ticks"><span>Quiet</span><span>Balanced</span><span>Deep scan</span></div>
+    </div>
+   </div>
+   <div class="el" data-code="CTL—27">
+    <div class="el-h"><span class="lbl">Tabs</span><span class="code">CTL—27</span></div>
+    <h3>Sections of a field manual</h3>
+    <div class="tabs" role="tablist" id="tabs"><button role="tab" type="button" aria-selected="true" data-p="0">Overview</button><button role="tab" type="button" aria-selected="false" data-p="1">History</button><button role="tab" type="button" aria-selected="false" data-p="2">GM notes</button></div>
+    <p class="tabp" id="tabp">The world as the crew first saw it: tides, stacks and the archivists who stayed.</p>
+   </div>
+   <div class="el" data-code="CTL—28">
+    <div class="el-h"><span class="lbl">Status chips</span><span class="code">CTL—28</span></div>
+    <h3>Color always paired with a word</h3>
+    <div class="row"><span class="chip c-ok">Nominal</span><span class="chip c-warn">Strained</span><span class="chip c-bad">Damaged</span><span class="chip c-pre">Unverified</span><span class="chip c-acc">Revealed</span><span class="chip hol c-dim">Hidden</span></div>
+   </div>
+   <div class="el" data-code="CTL—29">
+    <div class="el-h"><span class="lbl">Toast</span><span class="code">CTL—29</span></div>
+    <h3>Confirm without shouting</h3>
+    <div class="toastz"><div class="toast" id="toast" role="status"><span class="g">↳</span><span>Entry saved to Session 14.</span><button class="u" type="button" id="undo">Undo</button></div></div>
+    <div class="row"><button class="btn" type="button" id="tbtn">Save entry</button><span class="cap">Non-blocking · 4s</span></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- 03 PROGRESS -->
+<section class="s" id="progress">
+ <div class="sh"><span class="n">04 /</span><h2>Progress</h2><span class="lbl">Discrete over continuous</span><p>Count things that come in units as units. A smooth bar is for quantities, never for steps.</p></div>
+ <div class="xf"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+  <div class="lib">
+   <div class="el w" data-code="PRG—30">
+    <div class="el-h"><span class="lbl">Discrete progress</span><span class="code">PRG—30</span></div>
+    <h3>One segment per unit of work</h3>
+    <div class="prow"><span class="lbl">Drill course · Vey Reach to Corvane</span><span class="big num">6<small>/ 11 jumps</small></span></div>
+    <div class="dprog tall" style="--n:11"><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="done"></i><i class="next"></i><i></i><i></i><i></i><i></i></div>
+    <div class="dlab" style="--n:11"><span>01</span><span>02</span><span>03</span><span>04</span><span>05</span><span>06</span><span class="on">07 ·</span><span>08</span><span>09</span><span>10</span><span>11</span></div>
+    <div class="legend"><span><i style="background:var(--brass);border-color:var(--brass)"></i>Done</span><span><i class="hatch" style="border-color:var(--brass)"></i>Underway</span><span><i style="background:var(--ln2)"></i>Open</span></div>
+   </div>
+   <div class="el w" data-code="PRG—31">
+    <div class="el-h"><span class="lbl">Stepper</span><span class="code">PRG—31</span></div>
+    <h3>A sequence you can walk</h3>
+    <div class="stp" id="stp"></div>
+    <div class="stpl" id="stpl"></div>
+    <div class="stpnote"><p id="stpn"></p><div class="row"><button class="btn" type="button" id="sprev">← Previous</button><button class="btn pri" type="button" id="snext">Next step →</button></div></div>
+   </div>
+   <div class="el" data-code="PRG—32">
+    <div class="el-h"><span class="lbl">Cell meter</span><span class="code">PRG—32</span></div>
+    <h3>Pools that run out in whole points</h3>
+    <div class="meter"><div class="mh"><b>Hull points</b><span class="num c-ok">14 / 20</span></div><div class="cells ok" style="--n:20" data-f="14" data-x="2"></div></div>
+    <div class="meter"><div class="mh"><b>System strain</b><span class="num c-warn">3 / 10</span></div><div class="cells warn" style="--n:10" data-f="3"></div></div>
+    <div class="meter"><div class="mh"><b>Fuel loads</b><span class="num c-acc">4 / 6</span></div><div class="cells acc" style="--n:6" data-f="4"></div></div>
+    <span class="cap">Hatched oxide cells: points lost this session</span>
+   </div>
+   <div class="el" data-code="PRG—33">
+    <div class="el-h"><span class="lbl">Halo gauge</span><span class="code">PRG—33</span></div>
+    <h3>A quantity on an orbit</h3>
+    <div class="gauge">
+     <svg viewBox="0 0 150 150" aria-hidden="true">
+      <ellipse class="o-a drift" cx="75" cy="75" rx="74" ry="26" transform="rotate(-24 75 75)"/>
+      <circle class="g-track" cx="75" cy="75" r="52" stroke-dasharray="1.4 1.2" pathLength="100" transform="rotate(-90 75 75)"/>
+      <circle class="g-fill" id="gfill" cx="75" cy="75" r="52" pathLength="100" stroke-dasharray="72 100" transform="rotate(-90 75 75)"/>
+      <circle id="gsat" r="4.5" style="fill:var(--jade)" cx="75" cy="23"/>
+      <text class="g-txt" x="75" y="82" text-anchor="middle" id="gtxt">72%</text>
+      <text class="g-sm" x="75" y="98" text-anchor="middle">CHARGE</text>
+     </svg>
+     <div class="rng" style="width:100%">
+      <div class="top2"><label class="lbl" for="g-in">Spike drive charge</label></div>
+      <input type="range" class="sl" id="g-in" min="0" max="100" value="72" style="--v:72%">
+      <p class="desc" style="margin:0">The track is dashed, the reading is solid, and a jade satellite marks the current value.</p>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- 04 TABLES -->
+<section class="s" id="tables">
+ <div class="sh"><span class="n">05 /</span><h2>Tables</h2><span class="lbl">Construction-line grids</span><p>Inner rules overshoot the frame by the same 10px as the outer lines, so a table reads as part of the drawing.</p></div>
+ <div class="xf"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+  <div class="lib">
+   <div class="el w" data-code="TBL—34">
+    <div class="el-h"><span class="lbl">Construction table</span><span class="code">TBL—34</span></div>
+    <h3>Ship fittings · Long Patience</h3>
+    <div class="scroll">
+     <div class="xf xt" style="--cols:minmax(13em,1.6fr) minmax(6em,.8fr) 5.5em 5.5em minmax(8em,1fr);margin-block:10px"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+      <div class="xr xhd"><div class="xc">Fitting</div><div class="xc">Class</div><div class="xc" style="justify-content:flex-end">Power</div><div class="xc" style="justify-content:flex-end">Mass</div><div class="xc">Status</div></div>
+      <div class="xr"><div class="xc nm"><b>Spike Drive-2</b><small>Drill rating 2</small></div><div class="xc">Drive</div><div class="xc n">2</div><div class="xc n">1</div><div class="xc"><span class="chip c-ok">Nominal</span></div></div>
+      <div class="xr"><div class="xc nm"><b>Point-defense lasers</b><small>Fore and aft mounts</small></div><div class="xc">Weapon</div><div class="xc n">3</div><div class="xc n">2</div><div class="xc"><span class="chip c-acc">Armed</span></div></div>
+      <div class="xr"><div class="xc nm"><b>Fuel bunkers</b><small>One drill of reserve</small></div><div class="xc">Fitting</div><div class="xc n">0</div><div class="xc n">1</div><div class="xc"><span class="chip c-warn">Low</span></div></div>
+      <div class="xr"><div class="xc nm"><b>Sick bay</b><small>Hit by debris, jump 5</small></div><div class="xc">Fitting</div><div class="xc n">1</div><div class="xc n">1</div><div class="xc"><span class="chip c-bad">Damaged</span></div></div>
+      <div class="xr"><div class="xc nm"><b>Survey sensors</b><small>Salvaged, not yet tested</small></div><div class="xc">Fitting</div><div class="xc n">1</div><div class="xc n">1</div><div class="xc"><span class="chip c-pre">Unverified</span></div></div>
+     </div>
+    </div>
+   </div>
+   <div class="el w" data-code="TBL—35">
+    <div class="el-h"><span class="lbl">Access matrix</span><span class="code">TBL—35</span></div>
+    <h3>Who sees which part of an entry</h3>
+    <div class="scroll">
+     <div class="xf xt acc" style="--cols:minmax(9em,1.2fr) repeat(5,minmax(4.5em,1fr));margin-block:10px"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+      <div class="xr xhd"><div class="xc">Role</div><div class="xc" style="justify-content:center">Hull</div><div class="xc" style="justify-content:center">Cargo</div><div class="xc" style="justify-content:center">Ship log</div><div class="xc" style="justify-content:center">Contacts</div><div class="xc" style="justify-content:center">Secrets</div></div>
+      <div class="xr"><div class="xc">GM</div><div class="xc v lv-E">EDIT</div><div class="xc v lv-E">EDIT</div><div class="xc v lv-E">EDIT</div><div class="xc v lv-E">EDIT</div><div class="xc v lv-E">EDIT</div></div>
+      <div class="xr"><div class="xc">Captain</div><div class="xc v lv-E">EDIT</div><div class="xc v lv-E">EDIT</div><div class="xc v lv-A">NOTE</div><div class="xc v lv-A">NOTE</div><div class="xc v lv-N">—</div></div>
+      <div class="xr"><div class="xc">Pilot</div><div class="xc v lv-V">VIEW</div><div class="xc v lv-V">VIEW</div><div class="xc v lv-A">NOTE</div><div class="xc v lv-V">VIEW</div><div class="xc v lv-N">—</div></div>
+      <div class="xr"><div class="xc">Engineer</div><div class="xc v lv-A">NOTE</div><div class="xc v lv-V">VIEW</div><div class="xc v lv-V">VIEW</div><div class="xc v lv-N">—</div><div class="xc v lv-N">—</div></div>
+     </div>
+    </div>
+    <div class="legend"><span><i style="background:var(--brass);border-color:var(--brass)"></i>Edit</span><span><i style="background:color-mix(in srgb,var(--brass) 30%,transparent)"></i>Annotate</span><span><i style="background:var(--panel2)"></i>View</span><span><i></i>No access</span></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- 05 PROSE -->
+<section class="s" id="prose">
+ <div class="sh"><span class="n">06 /</span><h2>Prose</h2><span class="lbl">Lexicon reading pages</span><p>Reading pages open up the spacing, set titles in Noto Serif, let the frame recede and keep a contents rail beside the text. Redaction comes from the server as shapes, never as hidden text. Images choose one of three orbit modes.</p></div>
+ <div class="xf"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+  <div class="lib">
+   <div class="el w" data-code="PRS—36">
+    <div class="el-h"><span class="lbl">Article</span><span class="code">PRS—36</span></div>
+    <div class="prose" data-voice="prose">
+     <nav class="toc" data-toc="#artbody" aria-label="On this page">
+      <span class="lbl">On this page</span>
+      <ol id="toc">
+       <li class="cur"><a href="#toc-arrival" aria-current="true"><i>01</i><span>Arrival</span></a></li>
+       <li><a href="#toc-stacks"><i>02</i><span>The tidal stacks</span></a></li>
+       <li><a href="#toc-ledger"><i>03</i><span>The Ledger</span></a></li>
+       <li><a href="#toc-debt"><i>04</i><span>What the crew owes</span></a></li>
+      </ol>
+      <div class="tocnow"><span id="tocnow" data-toc-now>Arrival</span><span class="lbl b" id="tocn" data-toc-count>01 / 04</span></div>
+      <div class="dprog" id="tocbar" style="--n:4"><i class="next"></i><i></i><i></i><i></i></div>
+     </nav>
+     <div class="body" id="artbody">
+      <span class="lbl b">Lexicon · Worlds · Vey Reach</span>
+      <h4>The drowned archive of <em>Aster Vey</em></h4>
+      <p class="lead">Twice a day the tide climbs into the lower stacks, and twice a day the archivists carry what they can upstairs.</p>
+
+      <h5 id="toc-arrival"><span class="n">01</span>Arrival</h5>
+      <p class="drop">The archive was built when the sea sat three kilometres further out. Its founders cut the reading halls into the cliff and sealed the record vaults below the waterline, trusting pumps that have not run since the Scream.<sup><a href="#fn1">1</a></sup> What survives today survives because someone chose to carry it.</p>
+      <p>The crew came in on the evening tide, after six jumps through the Corvane drill. From orbit the world looked like any other ocean planet. From the landing pad it looked like a library that had lost an argument with the sea.</p>
+
+      <h5 id="toc-stacks"><span class="n">02</span>The tidal stacks</h5>
+      <figure class="ifig"><div class="media"><img src="img/terraces.jpg" alt="Frozen white terraces under a starry sky, with a lit saucer-shaped station and a cratered planet overhead" width="736" height="700" style="object-position:50% 45%"></div><figcaption>Fig 03.1 · The upper terraces at night, with the Ledger's station holding overhead</figcaption></figure>
+      <p>The stacks are terraces cut into the cliff, one above the other, each holding the records of a single century. The oldest sit lowest. That was a sensible choice until the water rose.</p>
+      <p>Twice a day the lower three terraces flood to the ceiling. The archivists know the tide tables by heart and work in shifts: one crew clears the shelves as the water comes in, another dries and sorts what was saved. The lit windows you can see from the water at dusk belong to the sorters.</p>
+
+      <h5 id="toc-ledger"><span class="n">03</span>The Ledger</h5>
+      <p>The current keeper, <span class="lred" data-words="7 6 2 3 6"></span>, will trade access for salvage. Her people work the upper galleries by lamplight and answer only to her.</p>
+      <p>The Ledger does not sell records. It trades them one for one, and it keeps a list of every debt it is owed. Archivists say the list of debts is longer than the archive itself.</p>
+
+      <h5 id="toc-debt"><span class="n">04</span>What the crew owes</h5>
+      <p>The keeper asks for one thing she will not name in front of offworlders: a drive core marked <span class="scr">Q7Ʒ-VΞX</span>.<sup><a href="#fn2">2</a></sup> In return she has promised the crew a single record from the sealed vaults, chosen by them.</p>
+      <p>Nobody has told her that the sealed vaults have been underwater for forty years. She may already know.</p>
+     </div>
+     <aside class="marg">
+      <div><span class="lbl">Entry</span><div class="serif" style="font-size:17px;color:var(--txt)">World · 03-C</div></div>
+      <div class="fn" id="fn1"><b>1</b><span>The Scream: the psychic event that collapsed interstellar travel six centuries ago.</span></div>
+      <div class="fn" id="fn2"><b>2</b><span>Scrambled for players below Rank 2 with the Ledger.</span></div>
+      <div><span class="lbl">Visibility</span><div class="row" style="margin-top:6px"><span class="chip c-acc">Revealed</span><span class="chip c-pre">2 redactions</span></div></div>
+     </aside>
+    </div>
+   </div>
+   <div class="el" data-code="PRS—37">
+    <div class="el-h"><span class="lbl">Redaction</span><span class="code">PRS—37</span></div>
+    <h3>Four ways to withhold</h3>
+    <div class="redx">
+     <div><span>Blackout</span><span>The keeper is <span class="lred" data-words="7 6"></span>.</span></div>
+     <div><span>Scramble</span><span>Look for the core <span class="scr">Q7Ʒ-VΞX</span>.</span></div>
+     <div><span>Replace</span><span>Her patron is <span class="rep">REDACTED</span>.</span></div>
+     <div><span>Hidden</span><div class="hid">2 passages withheld</div></div>
+    </div>
+    <p class="desc" style="margin:0">Bars are drawn per word, and scrambles per character, from lengths the server sends. Spaces stay unredacted. The real words never reach the browser.</p>
+   </div>
+   <div class="el" data-code="PRS—38">
+    <div class="el-h"><span class="lbl">Pull quote</span><span class="code">PRS—38</span></div>
+    <h3>A line worth the space</h3>
+    <div class="pq orbit" data-orbit="auto">
+     <blockquote>We do not keep everything. We keep what someone came back for.</blockquote>
+     <span class="lbl">Keeper of the Ledger · Session 12</span>
+    </div>
+   </div>
+   <div class="el" data-code="PRS—39">
+    <div class="el-h"><span class="lbl">Lexicon entry</span><span class="code">PRS—39</span></div>
+    <h3>A term, defined in place</h3>
+    <div class="lex">
+     <div class="t"><h4>Spike drill</h4><span class="pos">noun · astronautics</span></div>
+     <ol>
+      <li>A single jump through metadimensional space, made by a ship with a working spike drive.</li>
+      <li>The route itself, as in "the Corvane drill", when it has been flown often enough to chart.</li>
+     </ol>
+     <div class="see">See also · <a href="#tables">Spike Drive-2</a> · <a href="#progress">drill course</a></div>
+    </div>
+   </div>
+   <div class="el" data-code="PRS—40">
+    <div class="el-h"><span class="lbl">Callout & sequence</span><span class="code">PRS—40</span></div>
+    <h3>How a secret reaches a player</h3>
+    <ol class="path">
+     <li>The GM marks a passage as hidden in the vault note.</li>
+     <li>The server strips it for every viewer without access.</li>
+     <li>A reveal in session unlocks it for the chosen players.</li>
+    </ol>
+    <div class="exit"><b>Rule</b>Nothing a player may not see is ever sent to their browser.</div>
+   </div>
+   <div class="el w" data-code="PRS—41">
+    <div class="el-h"><span class="lbl">Event ledger</span><span class="code">PRS—41</span></div>
+    <h3>Session 14, in three acts</h3>
+    <div class="ledger">
+     <div><span class="lbl b">19:30 / Briefing</span><h4>The keeper's price</h4><p>The Ledger names a drive core as payment. The crew agrees before asking where it is.</p></div>
+     <div><span class="lbl b">21:05 / Drill</span><h4>Into the Corvane drill</h4><p>Jump 6 of 11. The sick bay takes debris on exit and goes offline.</p></div>
+     <div><span class="lbl b">23:40 / Contact</span><h4>A signal at orbit three</h4><p>The salvaged sensors pick up a beacon nobody can identify yet.</p></div>
+    </div>
+   </div>
+   <div class="el w" data-code="PRS—42">
+    <div class="el-h"><span class="lbl">Media cards</span><span class="code">PRS—42</span></div>
+    <h3>Orbits that know a card holds a picture</h3>
+    <div class="mcards">
+     <article class="oc mc orbit" data-orbit-mode="behind" data-orbit="auto">
+      <div class="media" style="aspect-ratio:16/10"><img src="img/long-patience.jpg" alt="A white container freighter with orange-striped cargo racks burning away from a planet, a moon behind it" width="1440" height="605" style="object-position:42% 50%"></div>
+      <span class="lbl b">Ship · Free merchant</span><h4>Long Patience</h4><p>Burning out of Aster Vey orbit with all five container racks full.</p>
+      <div class="ft"><span class="chip c-warn">Strained</span><span class="cap">Session 13</span></div>
+     </article>
+     <article class="oc cover orbit" data-orbit-mode="over" data-orbit="auto">
+      <div class="mc-bg media"><img src="img/landfall.jpg" alt="Hover tanks crossing a misty plain at dusk while drop-ships pass low overhead" width="1600" height="900" style="object-position:62% 50%"></div>
+      <div class="mc-tx"><span class="lbl">Event · Session 9</span><h4>Landfall at Corvane</h4><p>The Wardens came down at dusk. Two tank columns crossed the flats before the crew had cleared customs.</p><div class="ft"><span class="chip oi">Witnessed</span></div></div>
+     </article>
+     <article class="oc mc plain">
+      <div class="media" style="aspect-ratio:4/5"><img src="img/warden.jpg" alt="A drill warden in grey armour and a masked helmet with a yellow band, holding a rifle" width="900" height="1038" style="object-position:50% 18%"></div>
+      <span class="lbl b">Person · Drill Wardens</span><h4>Warden Kessel</h4><p>Boarding kit, cold-weather issue. The yellow bands mark a warden on drill duty.</p>
+      <div class="ft"><span class="chip c-acc">New</span><span class="cap">Session 9</span></div>
+     </article>
+     <article class="oc mc orbit" data-orbit-mode="behind" data-orbit="auto">
+      <div class="media" style="aspect-ratio:16/10"><img src="https://images.example.invalid/ledger-keeper.jpg" alt="Portrait of the Ledger's keeper" width="1200" height="750"><div class="fb"><span class="glyph" data-kind="person" data-seed="ilsabet-marrow" data-size="56" data-name="The keeper"></span><span class="lbl">Image unavailable</span><span class="cap" data-alt></span></div></div>
+      <span class="lbl b">Person · external image</span><h4>The keeper</h4><p>Linked from another host. When it fails, the frame keeps its size and shows the alt text.</p>
+      <div class="ft"><span class="chip c-bad">Failed to load</span><span class="cap">images.example.invalid</span></div>
+     </article>
+    </div>
+    <div class="modes">
+     <div><b>Behind</b>For cards with an inset image. The image sits above the orbit, and a 5px knockout ring lets the dashes tuck under it cleanly.</div>
+     <div><b>Over</b>For full-bleed images. The orbit runs on top, as a light dash over a dark halo, so it reads on any picture. It drifts at half speed.</div>
+     <div><b>Plain</b>For anything that should stay quiet, such as galleries, handouts and long lists. No orbit and no ring; the image sits flush at the top of the card.</div>
+     <div><b>Fallback</b>External images load into a hatched placeholder. A failure keeps the aspect ratio and swaps in the alt text, so the layout never jumps.</div>
+    </div>
+   </div>
+   <div class="el" data-code="PRS—43">
+    <div class="el-h"><span class="lbl">Image plate</span><span class="code">PRS—43</span></div>
+    <h3>A featured image as the planet</h3>
+    <figure class="iplate">
+     <div class="cb orbit" data-orbit-mode="ring" data-orbit="0.5,0.5,0.58,0.12,-14,35">
+      <span class="ov tl"><b>Plate 03</b> / Relic site</span>
+      <div class="media"><img src="img/relic-skull.jpg" alt="A giant skull overgrown with crystals, circled by a lattice ring under a violet night sky" width="1100" height="1373" style="object-position:50% 52%"></div>
+      <span class="ov br">Crowned Skull<b>Hex 0607</b></span>
+     </div>
+     <figcaption><span>Ring mode · the orbit passes behind the relic, then in front</span><span>Survey sketch, Session 12</span></figcaption>
+    </figure>
+   </div>
+   <div class="el" data-code="PRS—44">
+    <div class="el-h"><span class="lbl">Thumbnail list</span><span class="code">PRS—44</span></div>
+    <h3>Search results with pictures</h3>
+    <div class="tlist">
+     <a class="ti" href="#prose"><span class="media"><img src="img/long-patience.jpg" alt="" width="1440" height="605" style="object-position:40% 50%"></span><span><b>Long Patience</b><small>Ship · Free merchant</small></span><span class="chip c-warn">Strained</span></a>
+     <a class="ti" href="#prose"><span class="media"><img src="img/terraces.jpg" alt="" width="736" height="700"></span><span><b>The upper terraces</b><small>Place · Aster Vey</small></span><span class="chip c-ok">Revealed</span></a>
+     <a class="ti" href="#prose"><span class="media"><img src="img/warden.jpg" alt="" width="900" height="1038" style="object-position:50% 12%"></span><span><b>Warden Kessel</b><small>Person · Drill Wardens</small></span><span class="chip c-acc">New</span></a>
+     <a class="ti" href="#prose"><span class="media gfb"><span class="glyph" data-kind="person" data-seed="rhee-calder" data-size="40" data-name="Rhee Calder"></span></span><span><b>Rhee Calder</b><small>Person · no portrait</small></span><span class="chip c-ok">Revealed</span></a>
+     <a class="ti" href="#prose"><span class="media"><img src="img/relic-skull.jpg" alt="" width="1100" height="1373" style="object-position:50% 55%"></span><span><b>The Crowned Skull</b><small>Relic site · Hex 0607</small></span><span class="chip c-pre">Unverified</span></a>
+    </div>
+    <p class="desc" style="margin:0">Dense lists drop the orbit and keep only the aperture ring around each thumbnail.</p>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- 06 READOUTS -->
+<section class="s" id="readouts">
+ <div class="sh"><span class="n">07 /</span><h2>Readouts</h2><span class="lbl">Values and traces</span><p>Values in Noto Serif, units and labels in mono. A readout names its source and its scale.</p></div>
+ <div class="xf"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+  <div class="lib">
+   <div class="el w" data-code="RDT—45">
+    <div class="el-h"><span class="lbl">Stat strip</span><span class="code">RDT—45</span></div>
+    <h3>Four figures, one row</h3>
+    <div class="xf" style="margin-inline:10px"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+     <div class="stats">
+      <div><span class="lbl">Sector</span><b>Vey Reach</b><span class="cap">Hex 0405</span></div>
+      <div><span class="lbl">Drill course</span><b class="num">6<small>/ 11</small></b><span class="cap">Jump 7 underway</span></div>
+      <div><span class="lbl">Crew level</span><b class="num">4</b><span class="cap">Five characters</span></div>
+      <div><span class="lbl">Session</span><b class="num"><data class="u" data-kind="time" value="14" data-real="2026-10-23" data-short>14</data></b><span class="cap">Next on Friday</span></div>
+     </div>
+    </div>
+   </div>
+   <div class="el" data-code="RDT—46">
+    <div class="el-h"><span class="lbl">Dossier</span><span class="code">RDT—46</span></div>
+    <h3>An object as an instrument reading</h3>
+    <div class="dos">
+     <div class="dh"><h4>Aster Vey</h4><span class="chip c-ok">Surveyed</span></div>
+     <div class="dr"><span>Atmosphere</span><b>Breathable</b><small>Salt haze</small></div>
+     <div class="dr"><span>Temperature</span><b>Temperate</b><small>Tidal swings</small></div>
+     <div class="dr"><span>Biosphere</span><b>Microbial</b><small>Mats in the stacks</small></div>
+     <div class="dr"><span>Population</span><b><data class="u" data-kind="est" value="40000" data-source="One survey pass, Session 11">≈ 40,000</data></b><small>Estimate, unconfirmed</small></div>
+     <div class="dr"><span>Tech level</span><b><data class="u" data-kind="pre" data-unit="TL" value="3">TL3</data></b><small>Pumps failed</small></div>
+    </div>
+   </div>
+   <div class="el spec" data-code="RDT—47">
+    <div class="el-h"><span class="lbl">Spectrum trace</span><span class="code">RDT—47</span></div>
+    <h3>A signal, not a decoration</h3>
+    <svg viewBox="0 0 400 170" role="img" aria-label="Survey scan trace with a main peak at band 4 and an anomaly at band 7">
+     <line class="sp-grid" x1="20" y1="40" x2="390" y2="40"/><line class="sp-grid" x1="20" y1="80" x2="390" y2="80"/><line class="sp-grid" x1="20" y1="120" x2="390" y2="120"/>
+     <path class="sp-area" d="M20,140 L42,136 L64,138 L86,128 L108,132 L130,110 L152,118 L166,54 L180,108 L202,124 L224,130 L246,120 L262,96 L278,124 L300,132 L322,126 L344,134 L366,130 L390,136 L390,140 Z"/>
+     <polyline class="sp-line" points="20,140 42,136 64,138 86,128 108,132 130,110 152,118 166,54 180,108 202,124 224,130 246,120 262,96 278,124 300,132 322,126 344,134 366,130 390,136"/>
+     <line class="sp-base" x1="20" y1="140" x2="390" y2="140"/>
+     <circle class="sp-pk" cx="166" cy="54" r="3.5"/><text class="sp-val" x="174" y="50">0.82</text>
+     <circle class="sp-an" cx="262" cy="96" r="3.5"/><text class="sp-val" x="270" y="92">0.41 ?</text>
+     <text class="sp-lbl" x="20" y="160">BAND 1</text><text class="sp-lbl" x="205" y="160" text-anchor="middle">BAND 5</text><text class="sp-lbl" x="390" y="160" text-anchor="end">BAND 9</text>
+    </svg>
+    <div class="legend"><span><i style="background:var(--jade);border-color:var(--jade)"></i>Known source</span><span><i style="background:var(--oxide);border-color:var(--oxide)"></i>Anomaly</span></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- UNITS -->
+<section class="s" id="units">
+ <div class="sh"><span class="n">08 /</span><h2>Units</h2><span class="lbl">Values · formats · tooltips</span><p>Every number carries its unit, set the same way on every screen and formatted in the viewer's locale.</p></div>
+ <div class="xf"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+  <div class="lib">
+   <div class="el w" data-code="UNI—48">
+    <div class="el-h"><span class="lbl">Value kinds</span><span class="code">UNI—48</span></div>
+    <h3>Every number carries its unit</h3>
+    <p class="desc">Write the raw value once in a <code>&lt;data&gt;</code> element and the kit sets it: tabular digits, a narrow no-break space, the unit in small mono. Numbers follow the viewer's locale.</p>
+    <div class="palrow"><div class="seg" id="locseg" role="group" aria-label="Number locale preview"><span class="ind"></span><button type="button" data-l="" class="on" id="locauto">Browser</button><button type="button" data-l="en-GB">English</button><button type="button" data-l="de-DE">German</button></div><span class="cap" id="locnow"></span></div>
+    <div class="scroll">
+     <div class="xf xt units" style="--cols:minmax(8em,.6fr) minmax(10em,1fr) minmax(0,1.6fr);margin-block:10px"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+      <div class="xr xhd"><div class="xc">Kind</div><div class="xc">Rendered</div><div class="xc">Markup</div></div>
+      <div class="xr"><div class="xc">Quantity</div><div class="xc ul"><data class="u" value="1.6" data-unit="AU">1.6 AU</data></div><div class="xc"><code class="mk">&lt;data class=&quot;u&quot; value=&quot;1.6&quot; data-unit=&quot;AU&quot;&gt;</code></div></div>
+      <div class="xr"><div class="xc">Quantity, large</div><div class="xc ul"><data class="u" value="41800" data-unit="t">41,800 t</data></div><div class="xc"><code class="mk">&lt;data class=&quot;u&quot; value=&quot;41800&quot; data-unit=&quot;t&quot;&gt;</code></div></div>
+      <div class="xr"><div class="xc">Pool</div><div class="xc ul"><data class="u" data-kind="pool" value="14" data-max="20">14/20</data></div><div class="xc"><code class="mk">&lt;data class=&quot;u&quot; data-kind=&quot;pool&quot; value=&quot;14&quot; data-max=&quot;20&quot;&gt;</code></div></div>
+      <div class="xr"><div class="xc">Range</div><div class="xc ul"><data class="u" data-kind="range" value="2" data-to="4" data-unit="days">2–4 days</data></div><div class="xc"><code class="mk">&lt;data class=&quot;u&quot; data-kind=&quot;range&quot; value=&quot;2&quot; data-to=&quot;4&quot; data-unit=&quot;days&quot;&gt;</code></div></div>
+      <div class="xr"><div class="xc">Estimate</div><div class="xc ul"><data class="u" data-kind="est" value="40000" data-source="One survey pass, Session 11">≈ 40,000</data></div><div class="xc"><code class="mk">&lt;data class=&quot;u&quot; data-kind=&quot;est&quot; value=&quot;40000&quot; data-source=&quot;One survey pass, Session 11&quot;&gt;</code></div></div>
+      <div class="xr"><div class="xc">Delta</div><div class="xc ul"><data class="u" data-kind="delta" value="2" data-unit="HP" data-since="Session 13, after the drill">+2 HP</data> <data class="u" data-kind="delta" value="-1" data-unit="strain">−1 strain</data></div><div class="xc"><code class="mk">&lt;data class=&quot;u&quot; data-kind=&quot;delta&quot; value=&quot;2&quot; data-unit=&quot;HP&quot;&gt;</code></div></div>
+      <div class="xr"><div class="xc">Coordinates</div><div class="xc ul"><data class="u" data-kind="hex" value="0405">Hex 0405</data> · <data class="u" data-kind="bearing" value="41">041°</data></div><div class="xc"><code class="mk">&lt;data class=&quot;u&quot; data-kind=&quot;hex&quot; value=&quot;0405&quot;&gt;</code></div></div>
+      <div class="xr"><div class="xc">Money</div><div class="xc ul"><data class="u" data-kind="cr" value="12400">12,400 cr</data></div><div class="xc"><code class="mk">&lt;data class=&quot;u&quot; data-kind=&quot;cr&quot; value=&quot;12400&quot;&gt;</code></div></div>
+      <div class="xr"><div class="xc">Tech level</div><div class="xc ul"><data class="u" data-kind="pre" data-unit="TL" value="4">TL4</data></div><div class="xc"><code class="mk">&lt;data class=&quot;u&quot; data-kind=&quot;pre&quot; data-unit=&quot;TL&quot; value=&quot;4&quot;&gt;</code></div></div>
+      <div class="xr"><div class="xc">Dice</div><div class="xc ul"><data class="u" data-kind="dice" value="2d6+1">2d6+1</data></div><div class="xc"><code class="mk">&lt;data class=&quot;u&quot; data-kind=&quot;dice&quot; value=&quot;2d6+1&quot;&gt;</code></div></div>
+      <div class="xr"><div class="xc">Time</div><div class="xc ul"><data class="u" data-kind="time" value="14" data-day="212" data-real="2026-10-23">Day 212 · Session 14</data></div><div class="xc"><code class="mk">&lt;data class=&quot;u&quot; data-kind=&quot;time&quot; value=&quot;14&quot; data-day=&quot;212&quot; data-real=&quot;2026-10-23&quot;&gt;</code></div></div>
+     </div>
+    </div>
+   </div>
+   <div class="el" data-code="UNI—49">
+    <div class="el-h"><span class="lbl">Tooltip rule</span><span class="code">UNI—49</span></div>
+    <h3>Only when it adds something</h3>
+    <div class="exit"><b>Tooltip rule</b>A value gets a tooltip only when it adds information the reader can't already see: a real-world conversion, the source of an estimate, a roll's average and range, the real date of an in-world time, or the baseline of a change. Never restate what the value already says. If there is nothing to add, leave the tooltip out. Values with a tooltip show a faint underline on hover.</div>
+   </div>
+   <div class="el" data-code="UNI—50">
+    <div class="el-h"><span class="lbl">Formatter</span><span class="code">UNI—50</span></div>
+    <h3>The same rules from app code</h3>
+    <pre class="code"><span class="c">// from app code: same rules, returns markup</span>
+Astrobox.fmt.qty(1.6, 'AU');               <span class="c">// 1.6 AU, or 1,6 AU in German</span>
+Astrobox.fmt.pool(14, 20);                 <span class="c">// 14/20</span>
+Astrobox.fmt.est(40000, '', 'Survey, S11'); <span class="c">// ≈ 40,000, dashed: provisional</span>
+Astrobox.fmt.time({day: 212, session: 14, real: '2026-10-23'});
+Astrobox.hydrate(root);                    <span class="c">// formats every &lt;data class="u"&gt; inside root</span></pre>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- 07 STATES -->
+<section class="s" id="states">
+ <div class="sh"><span class="n">09 /</span><h2>States</h2><span class="lbl">Empty · loading · error · access</span><p>Every component keeps its shape in every state, so nothing jumps when data arrives, fails or is withheld.</p></div>
+ <div class="xf"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+  <div class="lib">
+   <div class="el w" data-code="STA—51">
+    <div class="el-h"><span class="lbl">State rules</span><span class="code">STA—51</span></div>
+    <h3>Five states, one shape</h3>
+    <div class="vocab strules">
+     <div><b>Empty</b><span class="m">Nothing yet</span><small>The frame stays. One sentence names what will appear, and one action adds the first item. Orbit cards keep the orbit but lose the satellite.</small><span class="q">“No fittings logged yet.”</span></div>
+     <div><b>Loading</b><span class="m">After 300 ms</span><small>Hatched blocks in the shape of the coming content. Shown only after 300 ms, so fast loads never flicker, and swapped out without moving anything.</small><span class="q">No text, no spinner.</span></div>
+     <div><b>Error</b><span class="m">Rose edge</span><small>What went wrong in one sentence, how to fix it in another, and a Retry button. No apology, no error codes up front.</small><span class="q">“Couldn't reach the Datapad server.”</span></div>
+     <div><b>Stale</b><span class="m">Dashed</span><small>When a refresh fails but older data exists, the data stays and turns provisional: dashed lines and the time of the last good sync.</small><span class="q">“Last synced 19:42.”</span></div>
+     <div><b>No access</b><span class="m">Bars</span><small>Shows that something exists and how long it is, never what it says. The server sends word lengths; each word becomes a bar and the spaces stay real, so withheld text wraps like text. One line gives the reason.</small><span class="q">“Revealed in session.”</span></div>
+    </div>
+   </div>
+   <div class="el w" data-code="STA—52">
+    <div class="el-h"><span class="lbl">Empty</span><span class="code">STA—52</span></div>
+    <h3>A frame waiting for its first item</h3>
+    <div class="empties">
+     <article class="oc orbit empty" data-orbit="0.98,0.12,0.92,0.52,-16;0.98,0.12,0.55,0.3,-16">
+      <span class="lbl b">Factions · Vey Reach</span>
+      <h4>No factions met yet</h4>
+      <p>Factions appear here once the crew has dealt with one.</p>
+      <div class="ft"><button class="btn" type="button">Add a faction</button></div>
+     </article>
+     <div class="xf xt etable" style="--cols:minmax(0,1.6fr) 5em 5em;margin:10px"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+      <div class="xr xhd"><div class="xc">Fitting</div><div class="xc" style="justify-content:flex-end">Power</div><div class="xc" style="justify-content:flex-end">Mass</div></div>
+      <div class="xr"><div class="xc emsg"><span>No fittings logged yet.</span><button class="btn q" type="button">Log a fitting →</button></div></div>
+     </div>
+     <div class="elist">
+      <span class="lbl">Session notes</span>
+      <p>Nothing written for Session 15.</p>
+      <button class="btn" type="button">Start a note</button>
+     </div>
+    </div>
+   </div>
+   <div class="el" data-code="STA—53">
+    <div class="el-h"><span class="lbl">Loading</span><span class="code">STA—53</span></div>
+    <h3>Hatched blocks in the final shape</h3>
+    <div class="ldbox" id="ldbox" data-state="loading" aria-busy="true">
+     <div class="ld-skel" aria-hidden="true">
+      <i class="sk" style="width:38%;height:10px"></i>
+      <i class="sk" style="width:62%;height:22px"></i>
+      <div class="sk-rows"><i class="sk"></i><i class="sk"></i><i class="sk"></i></div>
+     </div>
+     <div class="ld-real">
+      <span class="lbl b">Ship · Frigate</span>
+      <h4 class="serif">Long Patience</h4>
+      <div class="kv"><div><span class="lbl">Hull</span><b>14 / 20</b></div><div><span class="lbl">Drive</span><b>Spike-2</b></div></div>
+     </div>
+    </div>
+    <div class="row"><button class="btn" type="button" id="ldgo">Replay load</button><span class="cap" id="ldcap">Loading</span></div>
+   </div>
+   <div class="el" data-code="STA—54">
+    <div class="el-h"><span class="lbl">Error and stale</span><span class="code">STA—54</span></div>
+    <h3>Keep the old data, mark it provisional</h3>
+    <div class="errbar" id="errbar" role="status">
+     <div><b>Couldn't reach the Datapad server.</b><span>Check the connection, then retry. Showing data from the last sync.</span></div>
+     <button class="btn" type="button" id="retry">Retry</button>
+    </div>
+    <div class="xf xt stale" id="stalet" style="--cols:minmax(0,1.6fr) 5em 6.5em;margin:10px"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+     <div class="xr xhd"><div class="xc">System</div><div class="xc" style="justify-content:flex-end">Points</div><div class="xc">Status</div></div>
+     <div class="xr"><div class="xc">Hull</div><div class="xc n">14/20</div><div class="xc"><span class="chip c-warn">Strained</span></div></div>
+     <div class="xr"><div class="xc">System strain</div><div class="xc n">3/10</div><div class="xc"><span class="chip c-ok">Nominal</span></div></div>
+    </div>
+    <span class="cap" id="synccap">Last synced 19:42 · stale</span>
+   </div>
+   <div class="el w" data-code="STA—55">
+    <div class="el-h"><span class="lbl">No access</span><span class="code">STA—55</span></div>
+    <h3>Existence and length, never content</h3>
+    <div class="locks">
+     <div class="lk-text">
+      <span class="lbl">Lexicon · inline</span>
+      <p>The keeper's patron is <span class="lred" data-words="3 5 6"></span>, and the debt was signed on <span class="lred" data-words="3 3"></span>. The rest of the ledger is open to the crew.</p>
+      <span class="cap">Bars drawn per word from lengths the server sends</span>
+     </div>
+     <article class="oc locked">
+      <span class="lbl b">Faction · GM only</span>
+      <h4><span class="lred" data-words="3 7"></span></h4>
+      <p><span class="lred" data-words="5 8 3 6 2 4 7 3 5"></span></p>
+      <div class="ft"><span class="chip hol c-dim">Revealed in session</span></div>
+     </article>
+     <div class="lk-entry">
+      <div class="lk-head"><span class="lbl">Lexicon · whole entry</span><span class="chip hol c-dim">Captain and GM</span></div>
+      <h4><span class="lred" data-words="3 6 2 5"></span></h4>
+      <p class="lk-lines"><span class="lred" data-words="3 7 5 4 2 8 3 6 4 9 2 3 5 7 4 6 3 8 2 5 6 4 7 3"></span></p>
+      <p class="lk-why">Only the Captain can open this entry. Ask the GM if you think you should see it.</p>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- 10 MOTION -->
+<section class="s" id="motion">
+ <div class="sh"><span class="n">10 /</span><h2>Motion</h2><span class="lbl">Tokens · tempo · reduced motion</span><p>Eight named movements, two curves and two tempos. Anything that moves takes its timing from these tokens and nothing else.</p></div>
+ <div class="xf"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+  <div class="lib">
+   <div class="el w" data-code="MOT—56">
+    <div class="el-h"><span class="lbl">Motion tokens</span><span class="code">MOT—56</span></div>
+    <h3>Every movement has a name and a tempo</h3>
+    <p class="desc">Prose screens use a soft ease-out; mechanical screens use a crisper curve and run about a third faster. Both are set by <code>data-voice</code>, so components never choose their own timing.</p>
+    <div class="scroll">
+     <div class="xf xt" style="--cols:minmax(8em,.6fr) 6.5em 6.5em minmax(0,1.8fr);margin-block:10px"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+      <div class="xr xhd"><div class="xc">Token</div><div class="xc" style="justify-content:flex-end">Prose</div><div class="xc" style="justify-content:flex-end">Mechanical</div><div class="xc">Used for</div></div>
+      <div class="xr"><div class="xc"><code>--t-press</code></div><div class="xc n">120 ms</div><div class="xc n">80 ms</div><div class="xc">Button and key press</div></div>
+      <div class="xr"><div class="xc"><code>--t-swap</code></div><div class="xc n">240 ms</div><div class="xc n">160 ms</div><div class="xc">Content replacing content: toasts, tooltips, skeleton to data, image fade-in</div></div>
+      <div class="xr"><div class="xc"><code>--t-settle</code></div><div class="xc n">450 ms</div><div class="xc n">300 ms</div><div class="xc">Something moving to a new resting place: indicators, brackets, accordions, the contents rail</div></div>
+      <div class="xr"><div class="xc"><code>--t-draw</code></div><div class="xc n">800 ms</div><div class="xc n">530 ms</div><div class="xc">Construction lines drawing in, once, the first time a frame is seen</div></div>
+      <div class="xr"><div class="xc"><code>--t-pop</code></div><div class="xc n">380 ms</div><div class="xc n">250 ms</div><div class="xc">Plus marks after the lines. The only overshoot in the system</div></div>
+      <div class="xr"><div class="xc"><code>--t-count</code></div><div class="xc n">600 ms</div><div class="xc n">400 ms</div><div class="xc">A live value stepping to its new number, one unit at a time</div></div>
+      <div class="xr"><div class="xc"><code>--t-drift</code></div><div class="xc n">40–90 s</div><div class="xc n">40–90 s</div><div class="xc">Orbits, linear and endless, paused while offscreen</div></div>
+      <div class="xr"><div class="xc"><code>--t-wait</code></div><div class="xc n">300 ms</div><div class="xc n">300 ms</div><div class="xc">Delay before any loading state appears</div></div>
+     </div>
+    </div>
+    <div class="nest">
+     <div class="exit"><b>Curves</b><code>--ease</code> is <code>cubic-bezier(.2,.7,.2,1)</code> in prose and <code>cubic-bezier(.2,0,0,1)</code> in mechanical. <code>--ease-pop</code> is reserved for plus marks.</div>
+     <div class="exit"><b>Draw once</b>Frames draw the first time they enter the viewport and never again on that page. Frames below the fold wait, paused, until they are scrolled to.</div>
+    </div>
+   </div>
+   <div class="el w" data-code="MOT—57">
+    <div class="el-h"><span class="lbl">Specimens</span><span class="code">MOT—57</span></div>
+    <h3>Replay each token in either voice</h3>
+    <div class="palrow"><div class="seg" id="mvoice" role="group" aria-label="Specimen voice"><span class="ind"></span><button type="button" class="on" data-v="prose">Prose tempo</button><button type="button" data-v="mechanical">Mechanical tempo</button></div><button class="btn" type="button" id="ms-all">Replay all</button></div>
+    <div class="mspec" id="mstage" data-voice="prose">
+     <div class="ms-cell"><div class="ms-h"><b>Draw</b><span class="cap" data-tok="draw"></span></div><div class="ms-box"><div class="xf ms-xf" id="ms-draw"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i></div></div><button class="btn q ms-go" type="button" data-go="draw">Replay ↻</button></div>
+     <div class="ms-cell"><div class="ms-h"><b>Pop</b><span class="cap" data-tok="pop"></span></div><div class="ms-box"><div class="ms-pop" id="ms-pop"><i class="pl tl"></i><i class="pl br"></i></div></div><button class="btn q ms-go" type="button" data-go="pop">Replay ↻</button></div>
+     <div class="ms-cell"><div class="ms-h"><b>Settle</b><span class="cap" data-tok="settle"></span></div><div class="ms-box"><div class="seg" id="ms-seg" role="group" aria-label="Settle specimen"><span class="ind"></span><button type="button" class="on">Fore</button><button type="button">Aft</button></div></div><button class="btn q ms-go" type="button" data-go="settle">Replay ↻</button></div>
+     <div class="ms-cell"><div class="ms-h"><b>Swap</b><span class="cap" data-tok="swap"></span></div><div class="ms-box"><div class="ms-swap" id="ms-swap"><span class="a serif">Long Patience</span><span class="b serif">Quiet Tithe</span></div></div><button class="btn q ms-go" type="button" data-go="swap">Replay ↻</button></div>
+     <div class="ms-cell"><div class="ms-h"><b>Press</b><span class="cap" data-tok="press"></span></div><div class="ms-box"><button class="btn pri" type="button" id="ms-press">Begin drill</button></div><button class="btn q ms-go" type="button" data-go="press">Replay ↻</button></div>
+     <div class="ms-cell"><div class="ms-h"><b>Count</b><span class="cap" data-tok="count"></span></div><div class="ms-box"><span class="ms-num"><data class="u" data-kind="pool" value="14" data-max="20" id="ms-count">14/20</data></span></div><button class="btn q ms-go" type="button" data-go="count">Replay ↻</button></div>
+    </div>
+   </div>
+   <div class="el" data-code="MOT—58">
+    <div class="el-h"><span class="lbl">Motion rules</span><span class="code">MOT—58</span></div>
+    <h3>What may move, and what never does</h3>
+    <div class="rules mrules">
+     <div><b>May move</b>Frames drawing in once, indicators settling, content swapping in place, live values counting, orbits drifting.</div>
+     <div><b>Never moves</b>Layout around the reader, text being read, anything on hover except a tooltip, parallax, and any bounce other than the plus marks.</div>
+     <div><b>Loops</b>Only orbit drift and the loading shimmer loop. Both stop offscreen and under reduced motion.</div>
+     <div><b>Waiting</b>Nothing appears for the first 300 ms of a load. Fast answers arrive without any loading state at all.</div>
+    </div>
+   </div>
+   <div class="el" data-code="MOT—59">
+    <div class="el-h"><span class="lbl">Reduced motion</span><span class="code">MOT—59</span></div>
+    <h3>Movement stops, fades stay</h3>
+    <div class="redm">
+     <div><span>draw, pop</span><b>Frames and plus marks appear at once</b></div>
+     <div><span>settle</span><b>Indicators and brackets jump to place</b></div>
+     <div><span>swap</span><b>Kept as a short fade</b></div>
+     <div><span>count</span><b>Values change straight to the new number</b></div>
+     <div><span>drift</span><b>Orbits hold still; the plate's satellites stop</b></div>
+     <div><span>press</span><b>No scale; colour change only</b></div>
+    </div>
+    <p class="desc" style="margin:0">Opacity and colour fades don't cause motion sickness, so they remain the one way to show change when movement is off.</p>
+   </div>
+   <div class="el w" data-code="MOT—60">
+    <div class="el-h"><span class="lbl">Live values</span><span class="code">MOT—60</span></div>
+    <h3>Values count to their new number</h3>
+    <div class="live">
+     <div class="screen" data-voice="mechanical" id="livescreen">
+      <div class="sbar"><span class="lbl">Datapad · Long Patience · live</span><span class="chip c-warn">Strained</span></div>
+      <div class="meter"><div class="mh"><b>Hull points</b><span class="num"><data class="u" data-kind="pool" value="14" data-max="20" id="lv-hull">14/20</data></span></div><div class="cells ok" style="--n:20" data-f="14" id="lv-hullc"></div></div>
+      <div class="meter"><div class="mh"><b>System strain</b><span class="num"><data class="u" data-kind="pool" value="3" data-max="10" id="lv-strain">3/10</data></span></div><div class="cells warn" style="--n:10" data-f="3" id="lv-strainc"></div></div>
+      <div class="row"><button class="btn" type="button" data-lv="hull:-2">Take 2 damage</button><button class="btn" type="button" data-lv="hull:3">Repair 3</button><button class="btn" type="button" data-lv="strain:1">Add strain</button><button class="btn q" type="button" data-lv="strain:-3">Clear strain</button></div>
+     </div>
+     <div class="lvnote">
+      <p class="desc" style="margin:0">The number steps one unit at a time and the meter fills or empties one cell per step, together, over <code>--t-count</code>. A large jump keeps the same total time, so it never drags.</p>
+      <pre class="code"><span class="c">// from app code</span>
+Astrobox.count(hullValue, 12);
+Astrobox.count(hullCells, 12);</pre>
+     </div>
+    </div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<!-- 11 EXPORT -->
+<section class="s" id="export">
+ <div class="sh"><span class="n">11 /</span><h2>Export</h2><span class="lbl">Package · palette · install</span><p>Everything on this page ships as one package, so the Datapad, the Lexicon and any later app build from the same source.</p></div>
+ <div class="xf"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+  <div class="lib">
+   <div class="el w" data-code="EXP—61">
+    <div class="el-h"><span class="lbl">Package</span><span class="code">EXP—61</span></div>
+    <h3>Astrobox 1.0, in eight files</h3>
+    <div class="scroll">
+     <div class="xf xt" style="--cols:minmax(11em,.8fr) 8em minmax(0,2fr);margin-block:10px"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+      <div class="xr xhd"><div class="xc">File</div><div class="xc">Kind</div><div class="xc">Contents</div></div>
+      <div class="xr"><div class="xc"><code>astrobox.tokens.css</code></div><div class="xc"><span class="chip c-acc">Tokens</span></div><div class="xc">Colour for all four modes, type, structure, motion and density per voice, as CSS variables</div></div>
+      <div class="xr"><div class="xc"><code>astrobox.css</code></div><div class="xc"><span class="chip c-acc">Components</span></div><div class="xc">Every component in this library, inside @layer astrobox so app styles win</div></div>
+      <div class="xr"><div class="xc"><code>astrobox.js</code></div><div class="xc"><span class="chip c-acc">Runtime</span></div><div class="xc">Palette, orbits, moods, glyphs, units, tooltips, redaction, counting, motion, contents rail, brackets</div></div>
+      <div class="xr"><div class="xc"><code>astrobox.tokens.json</code></div><div class="xc"><span class="chip c-acc">Tokens</span></div><div class="xc">The same tokens in the W3C design-tokens format, for build tools</div></div>
+      <div class="xr"><div class="xc"><code>GUIDELINES.md</code></div><div class="xc"><span class="chip c-dim">Guide</span></div><div class="xc">The design guidelines for people</div></div>
+      <div class="xr"><div class="xc"><code>AGENTS.md</code></div><div class="xc"><span class="chip c-dim">Guide</span></div><div class="xc">The rules condensed for AI coding agents, with snippets, the API and a checklist</div></div>
+      <div class="xr"><div class="xc"><code>README.md</code></div><div class="xc"><span class="chip c-dim">Guide</span></div><div class="xc">Installation for plain HTML and Nuxt, switches and accent changes</div></div>
+      <div class="xr"><div class="xc"><code>example.html</code></div><div class="xc"><span class="chip c-dim">Example</span></div><div class="xc">A starter page built only from the package</div></div>
+     </div>
+    </div>
+   </div>
+   <div class="el" data-code="EXP—62">
+    <div class="el-h"><span class="lbl">Current palette</span><span class="code">EXP—62</span></div>
+    <h3>Take the palette you picked</h3>
+    <p class="desc" style="margin:0">The package ships signal brass. If you picked another accent or overrides in Color tokens, copy this stylesheet and load it after <code>astrobox.tokens.css</code>, or call the line below at startup.</p>
+    <pre class="code" id="expcall"></pre>
+    <pre class="code expcss" id="expcss"></pre>
+    <div class="row"><button class="btn pri" type="button" id="expcopy">Copy palette CSS</button><button class="btn" type="button" id="expcopycall">Copy JS call</button><span class="cap" id="expmsg"></span></div>
+   </div>
+   <div class="el" data-code="EXP—63">
+    <div class="el-h"><span class="lbl">Install</span><span class="code">EXP—63</span></div>
+    <h3>Three files and one call</h3>
+    <pre class="code"><span class="c">&lt;!-- plain HTML --&gt;</span>
+&lt;link rel="stylesheet" href="astrobox.tokens.css"&gt;
+&lt;link rel="stylesheet" href="astrobox.css"&gt;
+&lt;script src="astrobox.js"&gt;&lt;/script&gt;
+
+<span class="c">// Nuxt: plugins/astrobox.client.ts</span>
+import '~/assets/astrobox/astrobox.js'
+export default defineNuxtPlugin(app =&gt;
+  app.hook('page:finish', () =&gt; Astrobox.init(document)))
+
+<span class="c">// after rendering new markup</span>
+Astrobox.init(container)</pre>
+    <div class="exit"><b>For agents</b>Point coding agents at <code>AGENTS.md</code>, for example from the project's <code>CLAUDE.md</code>. It holds the hard rules, the decision tables, markup snippets and a pre-finish checklist.</div>
+   </div>
+  </div>
+ </div>
+</section>
+
+</main>
+
+<footer><div class="wrap"><div><span class="lbl"><b style="color:var(--txt)">Astrobox</b> / merged from Command Deck and ASTRA</span><span class="lbl">Sample content · reference artwork supplied for layout · Trailblazers campaign</span></div></div></footer>
+
+<script>window.ASTROBOX_MANUAL=true;</script>
+<script src="../assets/astrobox.js"></script>
+<script>
+(function(){
+ /* The library page is a consumer of the Astrobox package: astrobox.js provides orbits, moods, glyphs,
+    units, tooltips, redaction, counting, motion, the contents rail, brackets and segmented controls.
+    This script only wires the demos and the library's own chrome. */
+ const root=document.documentElement;
+ const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ Astrobox.init(document);
+ const placeInd=Astrobox.placeIndicator;
+
+
+ /* theme */
+ function setTheme(t,save){if(t)root.dataset.theme=t;else delete root.dataset.theme;if(save){try{localStorage.setItem('astrobox-theme',t)}catch(e){}}}
+ document.getElementById('theme').addEventListener('click',e=>{const b=e.target.closest('button');if(b)setTheme(b.dataset.t,true);});
+ try{const t=localStorage.getItem('astrobox-theme');if(t){setTheme(t);const seg=document.getElementById('theme');seg.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));placeInd(seg);}}catch(e){}
+
+ /* live re-seed demo */
+ const fs=document.getElementById('f-seed'),sc=document.getElementById('seedcard'),st=document.getElementById('seedt'),sv=document.getElementById('seedv');
+ function reseed(){st.textContent=fs.value||' ';Astrobox.redraw(sc);sv.textContent='0x'+(sc._seed>>>0).toString(16).padStart(8,'0');}
+ fs.addEventListener('input',reseed);reseed();
+
+ /* contrast */
+ const cbtn=document.getElementById('contrast');
+ function setC(on,save){if(on)root.dataset.contrast='high';else delete root.dataset.contrast;cbtn.setAttribute('aria-pressed',on?'true':'false');if(save){try{localStorage.setItem('astrobox-contrast',on?'high':'')}catch(e){}}}
+ cbtn.addEventListener('click',()=>{setC(root.dataset.contrast!=='high',true);setTimeout(()=>window.__astroRefresh&&window.__astroRefresh(),30);});
+ try{if(localStorage.getItem('astrobox-contrast')==='high')setC(true);}catch(e){}
+
+ const DEF={acc:'#f5a524',tint:null,ok:null,warn:null,bad:null,pre:null};
+ let cfg=Object.assign({},DEF);
+ try{const j=JSON.parse(localStorage.getItem('astrobox-palette')||'null');if(j&&/^#[0-9a-f]{6}$/i.test(j.acc))cfg=Object.assign({},DEF,j);}catch(e){}
+ const SIGVAR={ok:'--jade',warn:'--ember',bad:'--oxide',pre:'--iris'};
+ function modeNow(){const day=root.dataset.theme?root.dataset.theme==='light':matchMedia('(prefers-color-scheme: light)').matches;return {day:day,hc:root.dataset.contrast==='high'};}
+ function applyPalette(save){
+  Astrobox.palette.apply(cfg);
+  if(save){try{localStorage.setItem('astrobox-palette',JSON.stringify(cfg))}catch(e){}}
+  paletteUI();
+ }
+ const preset=document.getElementById('preset');
+ function paletteUI(){
+  const m=modeNow(),cur=Astrobox.palette.tokens({day:m.day,high:m.hc},cfg),cs=getComputedStyle(root);
+  preset.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.c===cfg.acc.toLowerCase()||(b.dataset.c==='custom'&&![...preset.querySelectorAll('button')].some(x=>x.dataset.c===cfg.acc.toLowerCase()))));
+  placeInd(preset);
+  document.querySelectorAll('#swgrid input[type=color]').forEach(inp=>{
+   const k=inp.dataset.k;
+   inp.value=k==='acc'?cfg.acc:(cfg[k]||(k==='tint'?cur.tintSample:cur[SIGVAR[k]]));
+   const tag=document.querySelector('[data-tag="'+k+'"]'),rs=document.querySelector('.rs[data-k="'+k+'"]');
+   if(k==='acc'){tag.textContent='Pick';tag.classList.add('set');}
+   else{tag.textContent=cfg[k]?'Override':'Derived';tag.classList.toggle('set',!!cfg[k]);rs.hidden=!cfg[k];}
+  });
+  document.querySelector('[data-sw="tint"]').style.background=root.dataset.palette==='rev1'?'var(--ln2)':(cfg.tint||cur.tintSample);
+  document.querySelectorAll('#swgrid .hx').forEach(el=>el.textContent=cs.getPropertyValue(el.dataset.v).trim());
+ }
+ preset.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.c==='custom'){const i=document.querySelector('#swgrid input[data-k="acc"]');try{i.showPicker?i.showPicker():i.click();}catch(err){i.click();}return;}
+  cfg.acc=b.dataset.c;applyPalette(true);});
+ document.getElementById('swgrid').addEventListener('input',e=>{const i=e.target.closest('input[type=color]');if(!i)return;cfg[i.dataset.k]=i.value.toLowerCase();applyPalette(true);});
+ document.getElementById('swgrid').addEventListener('click',e=>{const b=e.target.closest('.rs');if(!b)return;cfg[b.dataset.k]=null;applyPalette(true);});
+ document.getElementById('palreset').addEventListener('click',()=>{cfg=Object.assign({},DEF);applyPalette(true);});
+ const refresh=()=>setTimeout(paletteUI,30);window.__astroRefresh=paletteUI;
+ document.getElementById('theme').addEventListener('click',refresh);
+ matchMedia('(prefers-color-scheme: light)').addEventListener('change',refresh);
+ applyPalette(false);
+
+ /* Rev 01 colors (exploration) */
+ const rbtn=document.getElementById('rev1'),pal=document.getElementById('pal'),rnote=document.getElementById('rev1note');
+ function setRev(on,save){
+  if(on)root.dataset.palette='rev1';else delete root.dataset.palette;
+  rbtn.setAttribute('aria-pressed',on?'true':'false');pal.disabled=on;rnote.hidden=!on;cbtn.disabled=on;
+  if(save){try{localStorage.setItem('astrobox-rev1',on?'1':'')}catch(e){}}
+  refresh();
+ }
+ rbtn.addEventListener('click',()=>setRev(root.dataset.palette!=='rev1',true));
+ try{if(localStorage.getItem('astrobox-rev1')==='1')setRev(true);}catch(e){}
+
+ const locseg=document.getElementById('locseg'),locnow=document.getElementById('locnow');
+ function locLabel(){locnow.textContent='Formatting as '+Astrobox.fmt.locale;}
+ locseg.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;Astrobox.fmt.locale=b.dataset.l;locLabel();});
+ document.getElementById('locauto').textContent='Browser · '+(navigator.language||'en');placeInd(locseg);locLabel();
+
+ /* states: loading replay (skeleton only after 300 ms) */
+ const ldbox=document.getElementById('ldbox'),ldcap=document.getElementById('ldcap');let ldT=[];
+ function ldSet(st,txt){ldbox.dataset.state=st;ldbox.setAttribute('aria-busy',st==='ready'?'false':'true');ldcap.textContent=txt;}
+ document.getElementById('ldgo').addEventListener('click',()=>{ldT.forEach(clearTimeout);ldSet('waiting','Waiting · first 300 ms show nothing');
+  ldT=[setTimeout(()=>ldSet('loading','Loading'),300),setTimeout(()=>ldSet('ready','Loaded · swapped in place'),1900)];});
+ /* states: error and stale */
+ const errbar=document.getElementById('errbar'),stalet=document.getElementById('stalet'),synccap=document.getElementById('synccap'),retry=document.getElementById('retry');
+ const errHTML=errbar.innerHTML;
+ function bindRetry(){const r=document.getElementById('retry');if(r)r.addEventListener('click',doRetry);}
+ function doRetry(){const r=document.getElementById('retry');r.disabled=true;r.textContent='Retrying';
+  setTimeout(()=>{errbar.classList.add('ok');stalet.classList.remove('stale');
+   const t=new Intl.DateTimeFormat(Astrobox.fmt.locale,{hour:'2-digit',minute:'2-digit'}).format(new Date());
+   errbar.innerHTML='<div><b>Synced.</b><span>Data is current as of '+t+'.</span></div><button class="btn q" type="button" id="rebreak">Fail again</button>';
+   synccap.textContent='Last synced '+t;
+   document.getElementById('rebreak').addEventListener('click',()=>{errbar.classList.remove('ok');errbar.innerHTML=errHTML;stalet.classList.add('stale');synccap.textContent='Last synced 19:42 · stale';bindRetry();});
+  },900);}
+ bindRetry();
+
+
+ /* live builder */
+ const gId=document.getElementById('g-id'),gName=document.getElementById('g-name'),gKind=document.getElementById('g-kind'),gMood=document.getElementById('g-mood');
+ const gPrev=['gp96','gp40','gp24','gp16','gpin'].map(id=>document.getElementById(id));
+ function gUpdate(){const id=gId.value.trim(),nm=gName.value.trim(),seed=id||nm;
+  gPrev.forEach(el=>{el.dataset.kind=gKind.value;if(id)el.dataset.seed=id;else delete el.dataset.seed;el.dataset.name=el.id==='gpin'?'':nm;if(el.id==='gpin')delete el.dataset.name;
+   if(gMood.value)el.dataset.mood=gMood.value;else delete el.dataset.mood;});
+  Astrobox.glyphs(document.getElementById('gsizes'));Astrobox.glyphs(document.querySelector('.gline'));
+  document.getElementById('gpname').textContent=nm||'Unnamed';
+  document.getElementById('gseed').textContent='Seed '+(id?'from ID':'from name (no ID)')+' · 0x'+Astrobox.hash(seed||'?').toString(16).padStart(8,'0');}
+ [gId,gName,gKind,gMood].forEach(x=>x.addEventListener('input',gUpdate));gUpdate();
+
+
+ /* ---------- motion demos ---------- */
+ const msOf=(el,name)=>parseFloat(getComputedStyle(el).getPropertyValue(name))||0;
+ /* live demo */
+ const LV={hull:[document.getElementById('lv-hull'),document.getElementById('lv-hullc'),20],strain:[document.getElementById('lv-strain'),document.getElementById('lv-strainc'),10]};
+ document.getElementById('livescreen').addEventListener('click',e=>{const b=e.target.closest('[data-lv]');if(!b)return;
+  const[k,d]=b.dataset.lv.split(':'),[val,cells,max]=LV[k],cur=val._cur!=null?val._cur:+val.getAttribute('value');
+  const to=Math.max(0,Math.min(max,cur+(+d)));Astrobox.count(val,to);Astrobox.count(cells,to);});
+ /* specimens */
+ const mstage=document.getElementById('mstage');
+ function tokLabels(){mstage.querySelectorAll('[data-tok]').forEach(c=>{const t=c.dataset.tok,v=getComputedStyle(mstage).getPropertyValue('--t-'+t).trim();c.textContent='--t-'+t+' · '+v;});}
+ function restart(el){el.classList.add('mrs');void el.offsetWidth;el.classList.remove('mrs');}
+ let msCount=14;
+ const MS={
+  draw:()=>restart(document.getElementById('ms-draw')),
+  pop:()=>restart(document.getElementById('ms-pop')),
+  settle:()=>{const sg=document.getElementById('ms-seg'),bs=[...sg.querySelectorAll('button')],i=bs.findIndex(b=>b.classList.contains('on'));bs.forEach((b,j)=>b.classList.toggle('on',j!==i));placeInd(sg);},
+  swap:()=>document.getElementById('ms-swap').classList.toggle('alt'),
+  press:()=>{const b=document.getElementById('ms-press');b.classList.add('pressed');setTimeout(()=>b.classList.remove('pressed'),msOf(mstage,'--t-press')+60);},
+  count:()=>{msCount=msCount===14?6:14;Astrobox.count(document.getElementById('ms-count'),msCount);}
+ };
+ mstage.addEventListener('click',e=>{const b=e.target.closest('[data-go]');if(b)MS[b.dataset.go]();});
+ document.getElementById('ms-all').addEventListener('click',()=>Object.values(MS).forEach(f=>f()));
+ document.getElementById('mvoice').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;mstage.dataset.voice=b.dataset.v;tokLabels();});
+ tokLabels();
+
+ /* export: the palette currently picked in the editor */
+ function expCfg(){const c={acc:cfg.acc};['tint','ok','warn','bad','pre'].forEach(k=>{if(cfg[k])c[k]=cfg[k];});return c;}
+ function expCSS(){return '/* Astrobox palette · accent '+cfg.acc+' · load after astrobox.tokens.css */\n'+Astrobox.palette.css(cfg);}
+ const expcss=document.getElementById('expcss'),expcall=document.getElementById('expcall'),expmsg=document.getElementById('expmsg');
+ function expUpdate(){expcss.textContent=expCSS();expcall.textContent='Astrobox.palette.apply('+JSON.stringify(expCfg())+')';}
+ function expCopy(text,label){const done=()=>{expmsg.textContent=label+' copied';setTimeout(()=>expmsg.textContent='',2200);};
+  try{navigator.clipboard.writeText(text).then(done,()=>{selectText();expmsg.textContent='Selected; press Ctrl+C to copy';});}catch(e){selectText();expmsg.textContent='Selected; press Ctrl+C to copy';}
+  function selectText(){const r=document.createRange();r.selectNodeContents(label==='Palette CSS'?expcss:expcall);const sel=getSelection();sel.removeAllRanges();sel.addRange(r);}}
+ document.getElementById('expcopy').addEventListener('click',()=>{expUpdate();expCopy(expcss.textContent,'Palette CSS');});
+ document.getElementById('expcopycall').addEventListener('click',()=>{expUpdate();expCopy(expcall.textContent,'JS call');});
+ ['swgrid','preset','palreset'].forEach(id=>{const el=document.getElementById(id);['input','click'].forEach(ev=>el.addEventListener(ev,()=>setTimeout(expUpdate,40)));});
+ expUpdate();
+
+ /* mood demo */
+ const moodseg=document.getElementById('moodseg'),moodcard=document.getElementById('moodcard'),moodchip=document.getElementById('moodchip');
+ const CHIP={neutral:'c-acc',nominal:'c-ok',strained:'c-warn',damaged:'c-bad',unverified:'c-pre',hidden:'c-dim'};
+ moodseg.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;Astrobox.setMood(moodcard,b.dataset.m);});
+ moodcard.addEventListener('astro:mood',e=>{const m=e.detail.mood||'neutral';moodchip.className='chip '+CHIP[m];moodchip.textContent=m.charAt(0).toUpperCase()+m.slice(1);});
+
+
+ /* instrument keys */
+ document.getElementById('keys').addEventListener('click',e=>{const k=e.target.closest('.key');if(!k)return;k.setAttribute('aria-pressed',k.getAttribute('aria-pressed')==='true'?'false':'true');});
+
+ /* note counter */
+ const note=document.getElementById('f-note'),cnt=document.getElementById('f-cnt');
+ note.addEventListener('input',()=>cnt.textContent=note.value.length+' / 240');
+
+ /* switches */
+ document.querySelectorAll('.swt input').forEach(inp=>{const st=inp.closest('.swt').querySelector('.st');const upd=()=>st.textContent=inp.checked?'Active':(inp.id==='s2'?'Muted':'Off');inp.addEventListener('change',upd);upd();});
+
+ /* sliders */
+ const gain=document.getElementById('r-gain'),gout=document.getElementById('r-out');
+ gain.addEventListener('input',()=>{gain.style.setProperty('--v',gain.value+'%');gout.innerHTML=gain.value+'<small> / 100</small>';});
+ gain.style.setProperty('--v',gain.value+'%');
+
+ /* tabs */
+ const tp=['The world as the crew first saw it: tides, stacks and the archivists who stayed.','Founded before the Scream; the lower vaults flooded within a generation of the pumps failing.','GM only. The keeper knows where the drive core is and has already sold it once.'];
+ document.getElementById('tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;document.querySelectorAll('#tabs button').forEach(x=>x.setAttribute('aria-selected',x===b?'true':'false'));document.getElementById('tabp').textContent=tp[b.dataset.p];});
+
+ /* toast */
+ const toast=document.getElementById('toast');let n=14;
+ document.getElementById('tbtn').addEventListener('click',()=>{toast.hidden=false;toast.querySelector('span:nth-child(2)').textContent='Entry saved to Session '+n+'.';toast.classList.remove('in');void toast.offsetWidth;toast.classList.add('in');});
+ document.getElementById('undo').addEventListener('click',()=>{toast.querySelector('span:nth-child(2)').textContent='Save undone. The draft is still here.';toast.classList.remove('in');void toast.offsetWidth;toast.classList.add('in');});
+
+
+ /* stepper */
+ const steps=[['Plot course','Navigator sets the drill route and checks the beacon log.'],['Spin up','The drive charges for the jump. Strain is rolled here.'],['Drill','The ship enters the drill. Travel time depends on drive rating.'],['Exit','The ship drops out near the target system. Check for debris.'],['Survey','Sensors sweep the system before anyone leaves the bridge.']];
+ let cur=2;const stp=document.getElementById('stp'),stpl=document.getElementById('stpl'),stpn=document.getElementById('stpn');
+ function drawStp(){stp.innerHTML=steps.map((s,i)=>'<button type="button" aria-label="'+s[0]+'" class="'+(i<cur?'done':i===cur?'cur':'')+'" data-i="'+i+'"></button>').join('');stpl.innerHTML=steps.map((s,i)=>'<span class="'+(i<cur?'done':i===cur?'cur':'')+'">'+String(i+1).padStart(2,'0')+' '+s[0]+'</span>').join('');stpn.innerHTML='<b>'+steps[cur][0]+'</b> · '+steps[cur][1];document.getElementById('sprev').disabled=cur===0;document.getElementById('snext').disabled=cur===steps.length-1;}
+ stp.addEventListener('click',e=>{const b=e.target.closest('button');if(b){cur=+b.dataset.i;drawStp();}});
+ document.getElementById('sprev').addEventListener('click',()=>{if(cur>0){cur--;drawStp();}});
+ document.getElementById('snext').addEventListener('click',()=>{if(cur<steps.length-1){cur++;drawStp();}});
+ drawStp();
+
+ /* halo gauge */
+ const gin=document.getElementById('g-in'),gf=document.getElementById('gfill'),gs=document.getElementById('gsat'),gt=document.getElementById('gtxt');
+ function gauge(){const v=+gin.value;gin.style.setProperty('--v',v+'%');gf.setAttribute('stroke-dasharray',v+' 100');const a=(v/100)*2*Math.PI-Math.PI/2;gs.setAttribute('cx',75+52*Math.cos(a));gs.setAttribute('cy',75+52*Math.sin(a));gt.textContent=v+'%';}
+ gin.addEventListener('input',gauge);gauge();
+
+ /* element count */
+ const total=document.querySelectorAll('.el[data-code]').length;
+ document.getElementById('nEl').textContent=total;
+ document.getElementById('countlbl').textContent=total+' elements / 12 groups';
+
+ /* nav state */
+ const links=[...document.querySelectorAll('nav.idx a')];
+ const io=new IntersectionObserver(es=>{es.forEach(en=>{if(en.isIntersecting){links.forEach(l=>l.classList.toggle('on',l.getAttribute('href')==='#'+en.target.id));}});},{rootMargin:'-45% 0px -50% 0px'});
+ document.querySelectorAll('section.s').forEach(s=>io.observe(s));
+})();
+
+</script>

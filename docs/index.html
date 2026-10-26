@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Astrobox</title>
+<meta name="description" content="Astrobox design system: install it in a new project, or retrofit an existing one.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="assets/astrobox.tokens.css">
+<link rel="stylesheet" href="assets/astrobox.css">
+<style>
+/* README page layout only; colour, type, components and motion come from the Astrobox package in ./assets. */
+body{margin:0;background:var(--bg);color:var(--txt)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.body p a,.body li a,footer a{color:var(--brass-txt)}
+.routes>a,.bar a{color:inherit}
+code{font:13px var(--fm);background:var(--panel2);border:1px solid var(--ln2);padding:0 5px}
+pre.code code{background:none;border:0;padding:0;font:inherit}
+
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--ln2)}
+.bar .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:10px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font:600 12.5px var(--fm);letter-spacing:.26em;text-decoration:none;color:var(--txt)}
+.brand span{color:var(--dim);font-weight:400}
+.bar nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.bar .btn{padding:7px 11px;font-size:10.5px;text-decoration:none}
+
+.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px 44px;align-items:center;padding-block:48px 12px}
+.hero h1{margin:12px 0 16px;font:600 clamp(52px,8vw,92px)/.92 var(--fb);letter-spacing:-.045em}
+.hero h1 em{font:italic 400 1.04em/1 var(--fd);color:var(--brass-txt);letter-spacing:-.015em}
+.hero p{margin:0;color:var(--dim);font-size:16.5px;line-height:1.6;max-width:56ch}
+.hero p b{color:var(--txt);font-weight:500}
+.eyebrow{display:flex;align-items:center;gap:12px}
+.eyebrow::before{content:'';width:34px;border-top:1px solid var(--brass)}
+.quick{padding:26px 24px 22px;display:grid;grid-template-columns:minmax(0,1fr);gap:12px;min-width:0}
+.quick .seg{justify-self:start}
+.quick pre.code{margin:0}
+
+.doc{display:grid;grid-template-columns:12em minmax(0,1fr);gap:10px 44px;padding-block:24px 96px}
+.body section{scroll-margin-top:72px;padding-top:28px}
+.body h2{display:flex;gap:14px;align-items:baseline;margin:0 0 10px;font:600 30px/1.1 var(--fb);letter-spacing:-.025em;border-bottom:1px solid var(--ln2);padding-bottom:10px}
+.body h2 .n{font:500 12px var(--fm);color:var(--brass-txt);letter-spacing:.06em}
+.body h3{margin:26px 0 8px;font:400 23px/1.2 var(--fd)}
+.body p,.body li{max-width:68ch}
+.body p{margin:0 0 12px}
+.body ul{padding-left:20px;margin:0 0 12px} .body li{margin:4px 0}
+.body .lead{font:400 21px/1.45 var(--fd);color:var(--txt);max-width:58ch}
+.body .xf{margin-inline:10px}
+.body .scroll{margin-inline:-2px}
+.body .xt .xc{display:block}
+.body .xt .xc code{white-space:nowrap;font-size:12px}
+.cmd{position:relative}
+.cmd .cp{position:absolute;top:8px;right:8px;padding:4px 8px;font-size:10px;background:var(--panel2)}
+.cmd pre.code{padding-right:76px}
+.routes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--ln2);border:1px solid var(--ln2);margin:14px 0 6px}
+.routes>a{background:var(--panel);padding:14px 16px;display:grid;gap:4px;text-decoration:none;color:inherit;transition:background var(--t-swap) var(--ease)}
+.routes>a:hover{background:var(--hov)}
+.routes b{font:400 20px/1.2 var(--fd)}
+.routes small{color:var(--dim);font-size:13.5px}
+.phase{display:grid;grid-template-columns:3.2em minmax(0,1fr);gap:0 16px;border-top:1px solid var(--ln2);padding:16px 0 4px}
+.phase .num{font:400 30px/1 var(--fd);color:var(--brass-txt)}
+.phase h3{margin:0 0 6px}
+.prog-row{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin:16px 0 6px}
+.tree{font-size:12px;line-height:1.7}
+.tree .c{color:var(--faint)}
+.note{margin:14px 0}
+footer{border-top:1px solid var(--ln2);padding-block:22px 48px;color:var(--dim);font-size:13px}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+@media (max-width:900px){.hero{grid-template-columns:minmax(0,1fr)} .routes{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:760px){.doc{grid-template-columns:minmax(0,1fr)} .phase{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body class="astro-grid">
+
+<header class="bar">
+ <div class="wrap">
+  <a class="brand" href="#top">
+   <svg width="28" height="28" viewBox="0 0 30 30" aria-hidden="true"><rect x="7" y="7" width="16" height="16" fill="none" style="stroke:var(--txt)" stroke-width="1.2"/><ellipse cx="15" cy="15" rx="14" ry="5" transform="rotate(-24 15 15)" fill="none" style="stroke:var(--brass)" stroke-width="1" stroke-dasharray="2 2"/><circle cx="15" cy="15" r="2.6" style="fill:var(--brass)"/></svg>
+   ASTROBOX <span>1.0</span>
+  </a>
+  <nav aria-label="Site">
+   <a class="btn" href="library/">Element library</a>
+   <a class="btn" href="https://github.com/YOUR-USER/astrobox" data-repo>GitHub</a>
+   <div class="seg" id="theme" role="group" aria-label="Theme"><button type="button" class="on" data-t="">Auto</button><button type="button" data-t="dark">Night</button><button type="button" data-t="light">Day</button></div>
+   <button class="btn" type="button" id="contrast" aria-pressed="false">Contrast +</button>
+  </nav>
+ </div>
+</header>
+
+<div class="wrap hero" id="top">
+ <div>
+  <span class="lbl b eyebrow">Design system · README</span>
+  <h1>Astro<em>box.</em></h1>
+  <p><b>The design system for the Trailblazers apps.</b> Command Deck's construction lines and segmented bars carry the mechanics; brass, Noto Serif and dashed orbits carry the wonder. One package gives every app the same tokens, components, runtime, guidelines and agent rules.</p>
+ </div>
+ <div class="cb quick" aria-label="Quick start">
+  <span class="lbl b">Quick start · Nuxt</span>
+  <div class="cmd"><pre class="code"><code>npm install github:YOUR-USER/astrobox#v1.0.0</code></pre><button class="btn q cp" type="button">Copy</button></div>
+  <div class="cmd"><pre class="code"><code>// nuxt.config.ts
+export default defineNuxtConfig({
+  extends: ['astrobox'],
+})</code></pre><button class="btn q cp" type="button">Copy</button></div>
+  <span class="cap">Then set data-voice on your first screen. Details below.</span>
+ </div>
+</div>
+
+<div class="wrap doc" data-voice="prose">
+ <nav class="toc" data-toc="#body" aria-label="On this page">
+  <span class="lbl">On this page</span>
+  <ol>
+   <li><a href="#overview"><i>01</i><span>Overview</span></a></li>
+   <li><a href="#inside"><i>02</i><span>What's inside</span></a></li>
+   <li><a href="#new"><i>03</i><span>New project</span></a></li>
+   <li><a href="#retrofit"><i>04</i><span>Retrofit a project</span></a></li>
+   <li><a href="#updates"><i>05</i><span>Updating</span></a></li>
+   <li><a href="#agents"><i>06</i><span>AI agents</span></a></li>
+   <li><a href="#layout"><i>07</i><span>Repository layout</span></a></li>
+   <li><a href="#contribute"><i>08</i><span>Changing Astrobox</span></a></li>
+  </ol>
+  <div class="tocnow"><span data-toc-now>Overview</span><span class="lbl b" data-toc-count>01 / 08</span></div>
+  <div class="dprog" style="--n:8"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+ </nav>
+
+ <div class="body" id="body">
+
+  <section id="overview">
+   <h2><span class="n">01</span>Overview</h2>
+   <p class="lead">Astrobox is a set of rules first and a set of files second.</p>
+   <p>Every app built with it speaks one of two voices. The <b>mechanical</b> voice is for screens you operate, like the Datapad. The <b>prose</b> voice is for pages you read, like the Lore Lexicon. Frames say what they hold, dashed lines mean provisional, every number carries its unit, and secrets never reach the browser.</p>
+   <p>The <a href="library/">element library</a> shows every component live, with the palette editor, the type registers and the motion specimens. It loads the same package files your app does, so what you see there is what you get.</p>
+  </section>
+
+  <section id="inside">
+   <h2><span class="n">02</span>What's inside</h2>
+   <div class="scroll">
+    <div class="xf xt" style="--cols:minmax(11em,.9fr) minmax(0,2fr);--xt-min:520px"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+     <div class="xr xhd"><div class="xc">File</div><div class="xc">What it is</div></div>
+     <div class="xr"><div class="xc"><code>dist/astrobox.tokens.css</code></div><div class="xc">Every token as CSS variables: colour for night, day and both high-contrast modes, type, structure, motion and density per voice. Loads the three fonts.</div></div>
+     <div class="xr"><div class="xc"><code>dist/astrobox.css</code></div><div class="xc">All components, inside <code>@layer astrobox</code>, so your own unlayered styles always win.</div></div>
+     <div class="xr"><div class="xc"><code>dist/astrobox.js</code></div><div class="xc">The runtime: palette, orbits and moods, glyphs, units and tooltips, redaction, counting, motion, contents rail, brackets.</div></div>
+     <div class="xr"><div class="xc"><code>dist/astrobox.tokens.json</code></div><div class="xc">The same tokens in the W3C design-tokens format, for build tools.</div></div>
+     <div class="xr"><div class="xc"><code>nuxt.config.ts</code>, <code>plugins/</code></div><div class="xc">The Nuxt layer: stylesheets, fonts and the client plugin that initialises the runtime on every page.</div></div>
+     <div class="xr"><div class="xc"><code>GUIDELINES.md</code></div><div class="xc">The design guidelines for people.</div></div>
+     <div class="xr"><div class="xc"><code>AGENTS.md</code></div><div class="xc">The same rules for AI coding agents: hard rules, decision tables, snippets, API and checklist.</div></div>
+     <div class="xr"><div class="xc"><code>templates/</code></div><div class="xc">A Nuxt starter and a plain HTML example.</div></div>
+    </div>
+   </div>
+  </section>
+
+  <section id="new">
+   <h2><span class="n">03</span>New project</h2>
+   <p>Pick the route that matches the app. All three load the same files; the Nuxt layer just does the wiring for you.</p>
+   <div class="routes">
+    <a href="#new-template"><span class="lbl b">Fastest</span><b>Start from the template</b><small>A Nuxt app with Astrobox, a first screen and agent instructions.</small></a>
+    <a href="#new-nuxt"><span class="lbl b">Recommended</span><b>Add to a Nuxt app</b><small>One dependency, one line in the config.</small></a>
+    <a href="#new-other"><span class="lbl b">Anything else</span><b>Vite, Vue, React or plain HTML</b><small>Import two stylesheets and one script.</small></a>
+   </div>
+
+   <h3 id="new-template">Start from the template</h3>
+   <div class="cmd"><pre class="code"><code>npx giget gh:YOUR-USER/astrobox/templates/nuxt-starter my-app
+cd my-app && npm install && npm run dev</code></pre><button class="btn q cp" type="button">Copy</button></div>
+   <p>The template extends the Astrobox layer, renders a mechanical Datapad screen with a counting hull meter, and ships a <code>CLAUDE.md</code> that points agents at the rules.</p>
+
+   <h3 id="new-nuxt">Add to a Nuxt app</h3>
+   <ol class="path">
+    <li><span>Install a tagged version: <code>npm install github:YOUR-USER/astrobox#v1.0.0</code>.</span></li>
+    <li><span>Add the layer: <code>extends: ['astrobox']</code> in <code>nuxt.config.ts</code>. This brings the tokens, the components, the fonts and the runtime plugin.</span></li>
+    <li><span>Set the voice once per screen, on the outermost element: <code>data-voice="mechanical"</code> or <code>data-voice="prose"</code>.</span></li>
+    <li><span>Offer theme and contrast: set <code>data-theme</code> and <code>data-contrast</code> on <code>&lt;html&gt;</code>, or call <code>$astrobox.setTheme()</code> and <code>$astrobox.setContrast()</code>.</span></li>
+    <li><span>After rendering Astrobox markup outside a page change, call <code>useNuxtApp().$astrobox.init(el)</code>.</span></li>
+   </ol>
+   <div class="exit note"><b>Let Astrobox own its elements</b>Render units, meters, glyphs and redaction bars once, then update them through the runtime (<code>$astrobox.count</code>, <code>setMood</code>, <code>init</code>). If Vue re-renders their contents, the formatting is lost.</div>
+   <p>You can also skip the npm step and extend straight from GitHub: <code>extends: ['github:YOUR-USER/astrobox#v1.0.0']</code>.</p>
+
+   <h3 id="new-other">Vite, Vue, React or plain HTML</h3>
+   <div class="cmd"><pre class="code"><code>// with a bundler, after npm install
+import 'astrobox/tokens.css'
+import 'astrobox/astrobox.css'
+import 'astrobox/astrobox.js'   // initialises itself; call Astrobox.init(el) after renders</code></pre><button class="btn q cp" type="button">Copy</button></div>
+   <div class="cmd"><pre class="code"><code>&lt;!-- plain HTML, served from the tagged release via jsDelivr --&gt;
+&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/YOUR-USER/astrobox@v1.0.0/dist/astrobox.tokens.css"&gt;
+&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/YOUR-USER/astrobox@v1.0.0/dist/astrobox.css"&gt;
+&lt;script src="https://cdn.jsdelivr.net/gh/YOUR-USER/astrobox@v1.0.0/dist/astrobox.js" defer&gt;&lt;/script&gt;</code></pre><button class="btn q cp" type="button">Copy</button></div>
+   <p>jsDelivr only serves public repositories. For a private repo, copy <code>dist/</code> into the app or install it with npm. <code>templates/example.html</code> is a complete page that uses nothing but the package.</p>
+  </section>
+
+  <section id="retrofit">
+   <h2><span class="n">04</span>Retrofit an existing project</h2>
+   <p class="lead">Move in under the old styles, then replace them screen by screen.</p>
+   <p>Because every Astrobox rule sits in a low-priority CSS layer, installing it changes almost nothing on day one: your existing styles keep winning until you delete them. That lets you migrate one screen at a time and ship in between.</p>
+   <div class="prog-row"><span class="lbl">Seven phases</span><span class="lbl b">Ship after any phase</span></div>
+   <div class="dprog tall" style="--n:7"><i class="done"></i><i class="done"></i><i class="next"></i><i></i><i></i><i></i><i></i></div>
+
+   <div class="phase"><span class="num">01</span><div>
+    <h3>Audit</h3>
+    <ul>
+     <li>List the app's colours, fonts, spacing values and components.</li>
+     <li>Search for literal colours in component styles; each one needs a token.</li>
+     <li>List your custom properties that share a name with Astrobox's, such as <code>--bg</code>, <code>--txt</code>, <code>--panel</code>, <code>--ln</code> or <code>--dim</code>. Yours are unlayered, so they would override Astrobox's inside its components.</li>
+    </ul>
+   </div></div>
+
+   <div class="phase"><span class="num">02</span><div>
+    <h3>Install alongside</h3>
+    <p>Add the package and the layer (or the two stylesheets and the script) exactly as for a new project. For each colliding custom property from the audit, either rename yours or point it at Astrobox's value, so both systems read the same colour.</p>
+   </div></div>
+
+   <div class="phase"><span class="num">03</span><div>
+    <h3>Bridge the old tokens</h3>
+    <p>Keep old components working by aliasing their tokens to Astrobox's. The Datapad's Command Deck tokens map almost one to one:</p>
+    <div class="scroll">
+     <div class="xf xt" style="--cols:minmax(8em,1fr) minmax(8em,1fr) minmax(0,1.6fr);--xt-min:480px"><i class="pl tl"></i><i class="pl tr"></i><i class="pl bl"></i><i class="pl br"></i>
+      <div class="xr xhd"><div class="xc">Command Deck</div><div class="xc">Astrobox</div><div class="xc">Note</div></div>
+      <div class="xr"><div class="xc"><code>--acc</code></div><div class="xc"><code>--brass</code></div><div class="xc">The accent; orange becomes signal brass</div></div>
+      <div class="xr"><div class="xc"><code>--on-acc</code>, <code>--acc-txt</code></div><div class="xc"><code>--on-brass</code>, <code>--brass-txt</code></div><div class="xc">Text on and in the accent</div></div>
+      <div class="xr"><div class="xc"><code>--trk</code></div><div class="xc"><code>--ln2</code></div><div class="xc">Empty segments and tracks</div></div>
+      <div class="xr"><div class="xc"><code>--ok</code>, <code>--bad</code></div><div class="xc"><code>--jade</code>, <code>--oxide</code></div><div class="xc">Nominal and damaged</div></div>
+      <div class="xr"><div class="xc"><code>--warn</code>, <code>--neu</code></div><div class="xc"><code>--ember</code>, <code>--iris</code></div><div class="xc"><code>.c-neu</code> becomes <code>.c-pre</code></div></div>
+      <div class="xr"><div class="xc"><code>--bg</code>, <code>--panel</code>, <code>--ln</code>, <code>--ln2</code>, <code>--txt</code>, <code>--dim</code>, <code>--hov</code>, <code>--flash</code>, <code>--pc</code></div><div class="xc">Same names</div><div class="xc">Delete your definitions and Astrobox's take over</div></div>
+      <div class="xr"><div class="xc"><code>--fb</code>, <code>--fm</code></div><div class="xc">Same names</div><div class="xc">DM Mono becomes IBM Plex Mono</div></div>
+      <div class="xr"><div class="xc"><code>.xf</code>, <code>.pl</code>, <code>.xt</code>, <code>.seg</code>, <code>.chip</code>, <code>.dprog</code></div><div class="xc">Same classes</div><div class="xc">Same geometry; remove your copies of <code>frame.css</code></div></div>
+     </div>
+    </div>
+    <div class="cmd"><pre class="code"><code>/* bridge.css: load after Astrobox, delete when the last old component is gone */
+:root {
+  --acc: var(--brass);  --on-acc: var(--on-brass);  --acc-txt: var(--brass-txt);
+  --trk: var(--ln2);    --ok: var(--jade);  --bad: var(--oxide);
+  --warn: var(--ember); --neu: var(--iris);
+}</code></pre><button class="btn q cp" type="button">Copy</button></div>
+   </div></div>
+
+   <div class="phase"><span class="num">04</span><div>
+    <h3>Set the voices</h3>
+    <p>Put <code>data-voice</code> on each layout: <code>mechanical</code> for operating screens, <code>prose</code> for reading pages. This alone switches type, spacing, motion tempo and whether orbits show. Lore shown inside the Datapad becomes a prose inset; a stat block inside the Lexicon becomes a mechanical inset.</p>
+   </div></div>
+
+   <div class="phase"><span class="num">05</span><div>
+    <h3>Replace components, leaves first</h3>
+    <ul>
+     <li>Start with labels, chips and buttons, then inputs and segmented controls.</li>
+     <li>Then frames and tables, following the frame vocabulary: cross-frame for systems, brackets for the featured object, orbit cards for entities.</li>
+     <li>Then numbers: every value becomes a <code>&lt;data class="u"&gt;</code>, and tooltips only where they add information.</li>
+     <li>Then glyphs, on record references only.</li>
+     <li>Delete each old style as soon as nothing uses it.</li>
+    </ul>
+   </div></div>
+
+   <div class="phase"><span class="num">06</span><div>
+    <h3>Add the states and secure redaction</h3>
+    <p>Give every data-backed component its empty, loading, error, stale and no-access treatment. For the Lexicon this is the important change: the server must send word lengths (<code>data-words="7 6"</code>) instead of the withheld text, so nothing secret is ever in the page or the search index.</p>
+   </div></div>
+
+   <div class="phase"><span class="num">07</span><div>
+    <h3>Verify and remove the bridge</h3>
+    <ul>
+     <li>Run <code>Astrobox.auditFrames()</code> and <code>Astrobox.auditOrbits()</code> on every screen.</li>
+     <li>Check night, day, high contrast and reduced motion.</li>
+     <li>Search for literal colours and durations; there should be none left.</li>
+     <li>Delete <code>bridge.css</code>.</li>
+    </ul>
+   </div></div>
+  </section>
+
+  <section id="updates">
+   <h2><span class="n">05</span>Updating</h2>
+   <p>Apps pin a tag, so nothing changes under them until they choose to update. Versions follow semver:</p>
+   <ul>
+    <li><b>Major</b> (2.0.0): a class, attribute or token was renamed or removed. Read the changelog before updating.</li>
+    <li><b>Minor</b> (1.1.0): new components or tokens. Safe to update.</li>
+    <li><b>Patch</b> (1.0.1): fixed values or behaviour. Safe to update.</li>
+   </ul>
+   <p>To update an app, change the tag in <code>package.json</code> and reinstall. Renovate or Dependabot can open these pull requests for you whenever a new tag appears.</p>
+  </section>
+
+  <section id="agents">
+   <h2><span class="n">06</span>AI agents</h2>
+   <p>Point your coding agent at the rules for the exact version the app uses. For Claude Code, add this to the app's <code>CLAUDE.md</code>:</p>
+   <div class="cmd"><pre class="code"><code>For all UI work, follow node_modules/astrobox/AGENTS.md.
+The full reasoning is in node_modules/astrobox/GUIDELINES.md.
+Before finishing UI work, run Astrobox.auditFrames() and Astrobox.auditOrbits().</code></pre><button class="btn q cp" type="button">Copy</button></div>
+   <p><code>AGENTS.md</code> holds the hard rules, the decision tables for frames, glyphs and images, markup snippets, the runtime API and a checklist to run before finishing.</p>
+  </section>
+
+  <section id="layout">
+   <h2><span class="n">07</span>Repository layout</h2>
+   <pre class="code tree"><code>astrobox/
+├─ src/                     <span class="c"># edit these</span>
+│  ├─ tokens.config.mjs     <span class="c"># fonts, sizes, motion, density, default accent</span>
+│  ├─ palette.js            <span class="c"># OKLCH palette derivation, shared by build and runtime</span>
+│  ├─ components.css        <span class="c"># every component</span>
+│  └─ runtime.js            <span class="c"># behaviour; the palette is injected at build time</span>
+├─ scripts/build.mjs        <span class="c"># src/ → dist/ and docs/assets/</span>
+├─ dist/                    <span class="c"># built files, committed so GitHub installs need no build</span>
+├─ nuxt.config.ts           <span class="c"># the Nuxt layer</span>
+├─ plugins/astrobox.client.ts
+├─ templates/
+│  ├─ nuxt-starter/         <span class="c"># npx giget gh:YOUR-USER/astrobox/templates/nuxt-starter</span>
+│  └─ example.html
+├─ docs/                    <span class="c"># GitHub Pages: this README and the element library</span>
+│  ├─ index.html
+│  ├─ library/index.html
+│  └─ assets/               <span class="c"># copy of dist/, written by the build</span>
+├─ GUIDELINES.md
+├─ AGENTS.md
+├─ CHANGELOG.md
+└─ .github/workflows/check.yml   <span class="c"># fails when dist/ is out of date</span></code></pre>
+  </section>
+
+  <section id="contribute">
+   <h2><span class="n">08</span>Changing Astrobox</h2>
+   <ol class="path">
+    <li><span>Edit files in <code>src/</code>. Never edit <code>dist/</code> or <code>docs/assets/</code>; the build overwrites them.</span></li>
+    <li><span>Run <code>npm run build</code>, then open <code>docs/library/index.html</code> to see the change in every component.</span></li>
+    <li><span>Update <code>GUIDELINES.md</code> and <code>AGENTS.md</code> if a rule changed, and add a <code>CHANGELOG.md</code> entry.</span></li>
+    <li><span>Bump the version in <code>package.json</code>, rebuild, commit, and tag: <code>git tag v1.1.0 &amp;&amp; git push --tags</code>.</span></li>
+   </ol>
+   <p>The <code>check</code> workflow rebuilds on every push and fails if the committed <code>dist/</code> doesn't match <code>src/</code>. To publish these pages, enable GitHub Pages for the <code>main</code> branch and the <code>/docs</code> folder in the repository settings.</p>
+  </section>
+ </div>
+</div>
+
+<footer>
+ <div class="wrap"><span class="lbl">Astrobox 1.0 · Trailblazers campaign</span><span class="lbl"><a href="library/">Element library</a> · <a href="https://github.com/YOUR-USER/astrobox/blob/main/GUIDELINES.md" data-repo>Guidelines</a> · <a href="https://github.com/YOUR-USER/astrobox/blob/main/AGENTS.md" data-repo>Agent rules</a></span></div>
+</footer>
+
+<script src="assets/astrobox.js"></script>
+<script>
+(function(){
+ const root=document.documentElement;
+ /* on GitHub Pages, fill in the real owner wherever the docs say YOUR-USER */
+ const m=/^([a-z0-9-]+)\.github\.io$/i.exec(location.hostname);
+ if(m){const user=m[1];
+  document.querySelectorAll('pre.code code, .body code').forEach(c=>{if(c.textContent.includes('YOUR-USER'))c.textContent=c.textContent.split('YOUR-USER').join(user);});
+  document.querySelectorAll('a[data-repo]').forEach(a=>a.href=a.href.replace('YOUR-USER',user));}
+ /* copy buttons */
+ document.querySelectorAll('.cmd .cp').forEach(b=>b.addEventListener('click',()=>{
+  const t=b.parentElement.querySelector('code').textContent;
+  const done=w=>{b.textContent=w;setTimeout(()=>b.textContent='Copy',1600);};
+  try{navigator.clipboard.writeText(t).then(()=>done('Copied'),()=>done('Select and copy'));}catch(e){done('Select and copy');}
+ }));
+ /* theme and contrast, remembered in this browser */
+ const theme=document.getElementById('theme'),con=document.getElementById('contrast');
+ function setT(t){Astrobox.setTheme(t||null);try{localStorage.setItem('astrobox-readme-theme',t||'')}catch(e){}}
+ theme.addEventListener('astro:change',e=>setT(e.detail.button.dataset.t));
+ con.addEventListener('click',()=>{const on=root.dataset.contrast!=='high';Astrobox.setContrast(on);con.setAttribute('aria-pressed',on);try{localStorage.setItem('astrobox-readme-contrast',on?'1':'')}catch(e){}});
+ try{const t=localStorage.getItem('astrobox-readme-theme');if(t){setT(t);theme.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));Astrobox.placeIndicator(theme);}
+  if(localStorage.getItem('astrobox-readme-contrast')==='1'){Astrobox.setContrast(true);con.setAttribute('aria-pressed','true');}}catch(e){}
+})();
+</script>
+</body>
+</html>

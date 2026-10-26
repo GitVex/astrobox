@@ -1,0 +1,13 @@
+{
+  "name": "astrobox-starter",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build"
+  },
+  "dependencies": {
+    "astrobox": "github:YOUR-USER/astrobox#v1.0.0",
+    "nuxt": "^3.13.0"
+  }
+}

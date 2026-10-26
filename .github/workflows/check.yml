@@ -1,0 +1,12 @@
+# Fails the build when dist/ or docs/assets/ are out of date with src/.
+name: check
+on: [push, pull_request]
+jobs:
+  build-is-current:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm run check
