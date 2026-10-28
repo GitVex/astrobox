@@ -1,26 +1,29 @@
 {
   "name": "astrobox",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Astrobox design system: Command Deck structure with ASTRA's brass, serif and orbits. Tokens, components, runtime, guidelines and agent instructions.",
   "type": "module",
   "license": "UNLICENSED",
   "private": true,
   "exports": {
-    ".": "./dist/astrobox.js",
+    ".": "./nuxt.config.ts",
     "./tokens.css": "./dist/astrobox.tokens.css",
     "./astrobox.css": "./dist/astrobox.css",
     "./astrobox.js": "./dist/astrobox.js",
     "./tokens.json": "./dist/astrobox.tokens.json",
     "./GUIDELINES.md": "./GUIDELINES.md",
     "./AGENTS.md": "./AGENTS.md",
+    "./CLAUDE.md": "./CLAUDE.md",
     "./package.json": "./package.json"
   },
   "files": [
     "dist",
     "plugins",
     "nuxt.config.ts",
+    "app.config.ts",
     "GUIDELINES.md",
     "AGENTS.md",
+    "CLAUDE.md",
     "CHANGELOG.md"
   ],
   "scripts": {

@@ -7,7 +7,7 @@
     "build": "nuxt build"
   },
   "dependencies": {
-    "astrobox": "github:GitVex/astrobox#v1.0.0",
+    "astrobox": "github:GitVex/astrobox#v1.1.0",
     "nuxt": "^3.13.0"
   }
 }

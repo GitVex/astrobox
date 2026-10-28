@@ -228,6 +228,9 @@ code.mk{background:none;border:0;padding:0;font-size:11.5px;color:var(--dim);whi
 .gsizes{display:flex;align-items:flex-end;gap:22px;flex-wrap:wrap;border:1px solid var(--ln2);background:var(--panel2);padding:18px 18px 12px}
 .gsizes>div{display:grid;justify-items:center;gap:8px}
 .gline{margin:0;font-size:16.5px;line-height:1.6}
+.gvar{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:1px;background:var(--ln2);border:1px solid var(--ln2);margin-top:12px}
+.gvar>div{background:var(--panel);display:grid;place-items:center;min-height:64px}
+@media (max-width:760px){.gvar{grid-template-columns:repeat(6,minmax(0,1fr))}}
 .gset{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1px;background:var(--ln2);border:1px solid var(--ln2)}
 .gset>div{background:var(--panel);display:flex;gap:10px;align-items:center;padding:9px 11px;min-width:0}
 .gset b{display:block;font:400 16px/1.2 var(--fd);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -634,7 +637,7 @@ card.style.setProperty('--mood', '#6fb7ff');</pre>
    <div class="el w" data-code="GLY—14">
     <div class="el-h"><span class="lbl">Kinds</span><span class="code">GLY—14</span></div>
     <h3>Every record gets a mark of its own</h3>
-    <p class="desc">A glyph belongs to a record, not to a word: it appears only where the markup carries an entity's ID from the database, whatever its kind. Kind sets the core shape, the entity's ID seeds the orbit and satellite position, and <code>data-mood</code> colours the orbit and satellite while the core stays ink, so the kind always reads. The glyph shares its tilt with the entity's card orbit, and renaming an entity keeps its glyph.</p>
+    <p class="desc">A glyph belongs to a record, not to a word: it appears only where the markup carries an entity's ID from the database, whatever its kind. Kind sets the core shape. The entity's ID seeds the rest: each ring's tilt and openness, a second crossing or broken ring, one to three satellites and a small core detail. <code>data-mood</code> colours the orbits and the first satellite while the core stays ink, so the kind always reads. The glyph shares its tilt, second ring and satellite count with the entity's card orbit, and renaming an entity keeps its glyph.</p>
     <div class="gkinds">
      <div><span class="glyph" data-kind="world" data-seed="aster-vey" data-size="40"></span><b>World</b><small>Disc</small></div>
      <div><span class="glyph" data-kind="ship" data-seed="long-patience" data-size="40"></span><b>Ship</b><small>Chevron</small></div>
@@ -680,6 +683,15 @@ card.style.setProperty('--mood', '#6fb7ff');</pre>
        <div><span class="glyph" data-kind="faction" data-seed="quiet-ledger" data-size="24" aria-hidden="true"></span><span><b>The Quiet Ledger</b><small>quiet-ledger</small></span></div>
        <div><span class="glyph" data-kind="faction" data-seed="drill-wardens" data-size="24" data-mood="hidden" aria-hidden="true"></span><span><b>Drill Wardens</b><small>drill-wardens</small></span></div>
      </div>
+   </div>
+   <div class="el w" data-code="GLY—18">
+    <div class="el-h"><span class="lbl">Variety</span><span class="code">GLY—18</span></div>
+    <h3>Twenty-four records of one kind</h3>
+    <p class="desc">Many records of the same kind still need to tell apart at a glance. Pick a kind and a size to see 24 IDs side by side; <code>Astrobox.auditGlyphs(ids, kind)</code> lists the pairs that come out alike.</p>
+    <div class="row"><div class="seg" id="gvkind" role="group" aria-label="Kind"><button type="button" class="on" data-value="world">World</button><button type="button" data-value="ship">Ship</button><button type="button" data-value="station">Station</button><button type="button" data-value="person">Person</button><button type="button" data-value="faction">Faction</button></div>
+     <div class="seg" id="gvsize" role="group" aria-label="Size"><button type="button" class="on" data-value="40">40</button><button type="button" data-value="24">24</button><button type="button" data-value="16">16</button></div>
+     <span class="cap" id="gvaudit"></span></div>
+    <div class="gvar" id="gvar"></div>
    </div>
    <div class="el w" data-code="GLY—17">
     <div class="el-h"><span class="lbl">Records and placement</span><span class="code">GLY—17</span></div>
@@ -1353,10 +1365,8 @@ Astrobox.count(hullCells, 12);</pre>
 &lt;link rel="stylesheet" href="astrobox.css"&gt;
 &lt;script src="astrobox.js"&gt;&lt;/script&gt;
 
-<span class="c">// Nuxt: plugins/astrobox.client.ts</span>
-import '~/assets/astrobox/astrobox.js'
-export default defineNuxtPlugin(app =&gt;
-  app.hook('page:finish', () =&gt; Astrobox.init(document)))
+<span class="c">// Nuxt: the layer's plugin inits after hydration</span>
+export default defineNuxtConfig({ extends: ['astrobox'] })
 
 <span class="c">// after rendering new markup</span>
 Astrobox.init(container)</pre>
@@ -1480,6 +1490,16 @@ Astrobox.init(container)</pre>
   document.getElementById('gpname').textContent=nm||'Unnamed';
   document.getElementById('gseed').textContent='Seed '+(id?'from ID':'from name (no ID)')+' · 0x'+Astrobox.hash(seed||'?').toString(16).padStart(8,'0');}
  [gId,gName,gKind,gMood].forEach(x=>x.addEventListener('input',gUpdate));gUpdate();
+
+ /* variety grid: 24 record IDs of one kind */
+ const gvIds=['corvane','aster-vey','vey-b','long-patience','quiet-tithe','salt-runner','halyard-ring','beacon-041','rhee-calder','ilsabet-marrow','quiet-ledger','drill-wardens','sefa-okoro','ines-vatt','dov-hale','pell','marrow','kestrel','tamsin-roe','orrery-9','npc-0001','npc-0002','npc-0003','npc-0004'];
+ const gvar=document.getElementById('gvar'),gvState={kind:'world',size:'40'};
+ function gvDraw(){gvar.innerHTML=gvIds.map(id=>'<div title="'+id+'"><span class="glyph" data-kind="'+gvState.kind+'" data-seed="'+id+'" data-size="'+gvState.size+'" aria-hidden="true"></span></div>').join('');
+  Astrobox.glyphs(gvar);const n=Astrobox.auditGlyphs(gvIds,gvState.kind).length;
+  document.getElementById('gvaudit').textContent=n?n+(n===1?' pair':' pairs')+' alike':'No pairs alike';}
+ document.getElementById('gvkind').addEventListener('astro:change',e=>{gvState.kind=e.detail.value;gvDraw();});
+ document.getElementById('gvsize').addEventListener('astro:change',e=>{gvState.size=e.detail.value;gvDraw();});
+ gvDraw();
 
 
  /* ---------- motion demos ---------- */

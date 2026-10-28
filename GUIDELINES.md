@@ -174,8 +174,10 @@ Orbits are what make Astrobox recognisable, and also what wears out fastest. The
 A glyph is a small identity mark for a **record**: anything with an ID in the database.
 
 - **Kind sets the shape:** world is a disc, ship a chevron, station a square, person a ring, faction a hexagon.
-- **The ID seeds the rest:** orbit tilt, size and satellite position. Renaming a record keeps its glyph. The name is only a fallback seed.
-- **Mood colours the orbit and satellite**; the core stays ink so the kind always reads. A glyph inherits its card's mood.
+- **The ID seeds the rest:** the tilt and openness of each ring, a second ring that crosses the first (sometimes broken by a gap), one to three satellites of different sizes, and a small detail on the core. Renaming a record keeps its glyph. The name is only a fallback seed.
+- **Small glyphs simplify:** at 16–18px a glyph keeps one ring and one satellite; under 40px, two of each; core details appear from 40px. A record keeps its shape at every size.
+- **Mood colours the orbits and the first satellite**; the core and the other satellites stay ink or dim, so one colour carries the state and the kind always reads. A glyph inherits its card's mood.
+- **Card and glyph match:** a card's seeded orbit shares the glyph's tilt, crosses a second orbit when the glyph has a second ring, and carries a second satellite when the glyph does. To check a campaign's IDs for look-alikes, run `Astrobox.auditGlyphs(ids, kind)`.
 - **Records only:** never add glyphs by matching names in rendered text. Only markup that references the record gets one.
 
 ### Placement
