@@ -133,6 +133,7 @@ You are building UI with the Astrobox design system. Follow these rules exactly.
 | `Astrobox.glyphSVG(kind, id, size)` | Returns glyph SVG markup |
 | `Astrobox.redact(scope)`, `Astrobox.hydrate(scope)`, `Astrobox.glyphs(scope)` | Run one part of `init` |
 | `Astrobox.auditOrbits()`, `Astrobox.auditFrames()` | Development checks for the orbit budget and frame nesting |
+| `Astrobox.auditGlyphs(ids, kind?)` | Development check: returns pairs of record IDs whose glyphs look alike |
 
 Events: `astro:change` (segmented control), `astro:select` (attention grid), `astro:mood`, `astro:palette`.
 

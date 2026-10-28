@@ -436,6 +436,7 @@ h4 .glyph,.att-i b .glyph{margin-right:.32em}
 .glyph .g-line{fill:none;stroke:var(--txt)}
 .glyph .g-orb{fill:none;stroke:var(--dim);transition:stroke var(--t-settle)}
 .glyph .g-sat{fill:var(--mood,var(--brass));transition:fill var(--t-settle)}
+.glyph .g-sat2{fill:var(--dim)}
 .glyph[data-mood] .g-orb,[data-mood] .glyph:not([data-mood]) .g-orb{stroke:var(--mood)}
 a.rec{color:inherit;text-decoration:underline solid var(--ln2);text-underline-offset:4px;text-decoration-thickness:1px}
 a.rec:hover{text-decoration-color:var(--brass)}

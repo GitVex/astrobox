@@ -1,5 +1,5 @@
 /*!
- * Astrobox runtime 1.0.0
+ * Astrobox runtime 1.1.0
  * Behaviour for the Astrobox design system: palette derivation, seeded orbits, moods,
  * identity glyphs, units and tooltips, redaction, counting values, motion, contents rail,
  * attention brackets and segmented controls.
@@ -14,7 +14,7 @@
  const document = global.document, root = document.documentElement;
  const NS = 'http://www.w3.org/2000/svg';
  const reduce = global.matchMedia('(prefers-reduced-motion: reduce)').matches;
- const Astrobox = global.Astrobox = { version: '1.0.0' };
+ const Astrobox = global.Astrobox = { version: '1.1.0' };
 
  /* ---------- seeds and orbits ---------- */
  function mk(tag,attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
@@ -27,11 +27,13 @@
   const txt=el.dataset.entity||((el.dataset.orbitSeed||'')+el.textContent.replace(/\s+/g,' ').trim());
   const seed=fnv(txt),r=mulberry(seed),R=(a,b)=>a+(b-a)*r();
   const side=Math.floor(r()*4),[cx,cy]=edgePoint(side,r);
-  R(0,1);const rot=tiltFrom(seed),rx=R(0.6,1.12),ry=rx*R(0.3,0.62);
+  /* shares the glyph's traits: tilt, a second ring crossing at the glyph's yaw, a second satellite */
+  const t=traits(seed);
+  R(0,1);const rot=t.tilt,rx=R(0.6,1.12),ry=rx*R(0.3,0.62);
   const o=[[cx,cy,rx,ry,rot,r()<0.75?R(0,360):NaN]];
   const k=r();
-  if(k<0.42){const f=R(0.5,0.7);o.push([cx,cy,rx*f,ry*f,rot,r()<0.35?R(0,360):NaN]);}
-  else if(k<0.74){const[c2x,c2y]=edgePoint((side+2)%4,r);o.push([c2x,c2y,R(0.45,0.8),R(0.18,0.42),rot+R(-8,8),NaN]);}
+  if(t.ring2){const f=R(0.55,0.8);o.push([cx,cy,rx*f,rx*f*R(0.2,0.6),rot+t.yaw2,t.sats>1?R(0,360):NaN]);}
+  else if(k<0.5){const[c2x,c2y]=edgePoint((side+2)%4,r);o.push([c2x,c2y,R(0.45,0.8),R(0.18,0.42),rot+R(-8,8),t.sats>1?R(0,360):NaN]);}
   el._seed=seed;return o;
  }
  function specs(el){
@@ -244,26 +246,68 @@
  Astrobox.units = { register(name, label, convert) { UNITS[name] = [label, convert]; }, list: UNITS };
 
  /* ---------- identity glyphs ---------- */
+ /* Core shapes per kind. d is a seeded detail (0 none, 1, 2) drawn only at 40px and up; a is its angle. */
+ const f2=n=>n.toFixed(2),pt=(r,a)=>f2(20+r*Math.cos(a*Math.PI/180))+' '+f2(20+r*Math.sin(a*Math.PI/180));
  const GCORE={
-  world:()=>'<circle class="g-core" cx="20" cy="20" r="7.2"/>',
-  ship:()=>'<path class="g-core" d="M20 11.5 L27.5 27.5 L20 23.2 L12.5 27.5 Z"/>',
-  station:w=>'<rect class="g-line" x="14" y="14" width="12" height="12" stroke-width="'+w+'"/><rect class="g-core" x="18.4" y="18.4" width="3.2" height="3.2"/>',
-  person:w=>'<circle class="g-line" cx="20" cy="20" r="6.2" stroke-width="'+w+'"/><circle class="g-core" cx="20" cy="20" r="2"/>',
-  faction:w=>{let d='';for(let i=0;i<6;i++){const a=Math.PI/3*i-Math.PI/2;d+=(i?'L':'M')+(20+8.2*Math.cos(a)).toFixed(2)+' '+(20+8.2*Math.sin(a)).toFixed(2)+' ';}return '<path class="g-line" d="'+d+'Z" stroke-width="'+w+'" stroke-linejoin="round"/>';}
+  world:(w,d,a)=>d===1?'<circle class="g-core" cx="20" cy="20" r="7.2" opacity=".4"/><path class="g-core" d="M'+pt(7.2,a-90)+' A7.2 7.2 0 0 1 '+pt(7.2,a+90)+'Z"/>'
+   :'<circle class="g-core" cx="20" cy="20" r="7.2"/>'+(d===2?'<circle class="g-core" cx="'+f2(20+10.6*Math.cos(a*Math.PI/180))+'" cy="'+f2(20+10.6*Math.sin(a*Math.PI/180))+'" r="1.5"/>':''),
+  ship:(w,d)=>'<path class="g-core" d="'+(d===2?'M20 11.5 L27.5 27.5 L20 20.4 L12.5 27.5 Z':'M20 11.5 L27.5 27.5 L20 23.2 L12.5 27.5 Z')+'"/>'
+   +(d===1?'<path class="g-line" d="M12.5 27.5 L11.2 30.6 M27.5 27.5 L28.8 30.6" stroke-width="'+w+'" stroke-linecap="round"/>':''),
+  station:(w,d)=>'<rect class="g-line" x="14" y="14" width="12" height="12" stroke-width="'+w+'"/>'
+   +(d===2?'<rect class="g-core" x="18.4" y="18.4" width="3.2" height="3.2" transform="rotate(45 20 20)"/>':'<rect class="g-core" x="18.4" y="18.4" width="3.2" height="3.2"/>')
+   +(d===1?'<path class="g-line" d="M20 14 V11.4 M20 26 V28.6 M14 20 H11.4 M26 20 H28.6" stroke-width="'+w+'"/>':''),
+  person:(w,d,a)=>'<circle class="g-line" cx="20" cy="20" r="6.2" stroke-width="'+w+'"/><circle class="g-core" cx="20" cy="20" r="2"/>'
+   +(d===1?'<circle class="g-line" cx="20" cy="20" r="3.9" stroke-width="'+(w*.6)+'"/>':d===2?'<path class="g-line" d="M'+pt(6.2,a)+' L'+pt(9,a)+'" stroke-width="'+w+'" stroke-linecap="round"/>':''),
+  faction:(w,d)=>{const hex=R=>{let p='';for(let i=0;i<6;i++)p+=(i?'L':'M')+pt(R,60*i-90)+' ';return p+'Z';};
+   return '<path class="g-line" d="'+hex(8.2)+'" stroke-width="'+w+'" stroke-linejoin="round"/>'
+    +(d===1?'<circle class="g-core" cx="20" cy="20" r="1.9"/>':d===2?'<path class="g-line" d="'+hex(4.3)+'" stroke-width="'+(w*.7)+'" stroke-linejoin="round"/>':'');}
  };
+ /* traits a record's glyph shares with its card orbit: tilt, second ring (0 none, 1 full, 2 partial) and its yaw, satellite count */
+ function traits(seed){
+  const r=mulberry((seed^0x85ebca6b)>>>0),k=r(),s=r();
+  return {tilt:tiltFrom(seed),ring2:k<0.3?0:k<0.72?1:2,yaw2:(r()<0.5?-1:1)*(20+30*r()),sats:s<0.4?1:s<0.78?2:3};
+ }
+ /* every seeded choice, independent of size; the size only decides how much of it is drawn */
+ function glyphParams(seed){
+  const t=traits(seed),r=mulberry(seed),R=(a,b)=>a+(b-a)*r();
+  const p1=R(0.24,0.48),rings=[{rot:t.tilt,rx:R(14.5,18),p:p1,from:0,span:360}];
+  if(t.ring2){
+   let p=R(0.14,0.6);if(Math.abs(p-p1)<0.1)p=p1>0.37?p1-0.2:p1+0.2;
+   rings.push({rot:t.tilt+t.yaw2,rx:R(12.5,18.5),p,from:R(0,360),span:t.ring2===2?R(220,290):360});
+  }
+  const sats=[];
+  for(let i=0;i<t.sats;i++){
+   const ri=i&&rings.length>1&&r()<0.6?1:0,g=rings[ri],f=i?(r()<0.5?0.55:0.75):1;
+   let u=R(0.05,0.95),a=0;
+   /* keep clear of the core and of satellites already on this ring */
+   for(let n=0;n<12;n++){a=(g.from+g.span*u)%360;const c=Math.cos(a*Math.PI/180),s=Math.sin(a*Math.PI/180);
+    if(Math.hypot(g.rx*c,g.rx*g.p*s)>=11&&!sats.some(o=>o.ring===ri&&Math.abs(((o.a-a)%360+540)%360-180)<60))break;
+    u=(u+37/g.span)%1;}
+   sats.push({ring:ri,a,f});
+  }
+  return {tilt:t.tilt,yaw2:t.yaw2,ring2:t.ring2,rings,sats,core:{s:R(0.92,1.06),d:Math.floor(r()*3),a:R(0,360)}};
+ }
  function glyphSVG(kind,seedStr,size){
-  size=size||16;const seed=fnv(String(seedStr||'?')),r=mulberry(seed),tilt=tiltFrom(seed);
-  const w=size<=18?2.6:size<=24?2:size<=40?1.5:1.1,ow=size<=18?2.1:size<=24?1.7:size<=40?1.35:1.1;
-  const rx=14.5+3.5*r(),ry=rx*(0.28+0.18*r()),two=size>=24&&r()<0.5,a=r()*Math.PI*2;
-  const sx=20+rx*Math.cos(a),sy=20+ry*Math.sin(a),sr=size<=18?3.8:size<=24?3.3:2.9;
-  const ring=(RX,RY)=>'<ellipse class="g-orb" cx="20" cy="20" rx="'+RX.toFixed(2)+'" ry="'+RY.toFixed(2)+'" stroke-width="'+ow+'"/>';
-  const front=(RX,RY)=>'<path class="g-orb" d="M'+(20-RX).toFixed(2)+' 20 A'+RX.toFixed(2)+' '+RY.toFixed(2)+' 0 0 0 '+(20+RX).toFixed(2)+' 20" stroke-width="'+ow+'"/>';
-  const g0='<g transform="rotate('+tilt.toFixed(1)+' 20 20)">';
-  let out='<svg width="'+size+'" height="'+size+'" viewBox="0 0 40 40" aria-hidden="true">';
-  out+=g0+ring(rx,ry)+(two?ring(rx*1.22,ry*1.3):'')+'</g>';
-  out+=(GCORE[kind]||GCORE.world)(w);
-  out+=g0+front(rx,ry)+'<circle class="g-sat" cx="'+sx.toFixed(2)+'" cy="'+sy.toFixed(2)+'" r="'+sr+'"/></g>';
-  return out+'</svg>';
+  size=size||16;const P=glyphParams(fnv(String(seedStr||'?')));
+  /* 16-18px: one ring, one satellite. Under 40px: two of each. Core details from 40px. */
+  const nR=size<=18?1:2,nS=size<=18?1:size<40?2:3;
+  const w=size<=18?2.6:size<=24?2:size<=40?1.5:1.1,ow=size<=18?2.1:size<=24?1.7:size<=40?1.35:1.1,sr=size<=18?3.8:size<=24?3.3:2.9;
+  const rings=P.rings.slice(0,nR),sats=P.sats.filter(s=>s.ring<nR).slice(0,nS);
+  const at=(g,a)=>[20+g.rx*Math.cos(a*Math.PI/180),20+g.rx*g.p*Math.sin(a*Math.PI/180)];
+  const arc=(g,a0,a1)=>{const p=at(g,a0),q=at(g,a1);return 'M'+f2(p[0])+' '+f2(p[1])+' A'+f2(g.rx)+' '+f2(g.rx*g.p)+' 0 '+(a1-a0>180?1:0)+' 1 '+f2(q[0])+' '+f2(q[1]);};
+  const grp=(g,inner)=>'<g transform="rotate('+g.rot.toFixed(1)+' 20 20)">'+inner+'</g>',sw='" stroke-width="'+ow+'"/>';
+  /* front half (angles 0-180, below the centre before rotation) is drawn again over the core */
+  const front=g=>{if(g.span>=360)return arc(g,0,180);const s=g.from%360,e=s+g.span;let d='';
+   for(const[a,b]of[[s,Math.min(e,360)],[0,e-360]]){const lo=Math.max(a,0),hi=Math.min(b,180);if(hi-lo>0.5)d+=arc(g,lo,hi);}return d;};
+  let back='',over='';
+  rings.forEach(g=>{
+   back+=grp(g,g.span>=360?'<ellipse class="g-orb" cx="20" cy="20" rx="'+f2(g.rx)+'" ry="'+f2(g.rx*g.p)+sw:'<path class="g-orb" d="'+arc(g,g.from,g.from+g.span)+sw);
+   const fr=front(g);over+=grp(g,(fr?'<path class="g-orb" d="'+fr+sw:'')+sats.map((s,i)=>{if(P.rings[s.ring]!==g)return '';const p=at(g,s.a);
+    return '<circle class="'+(i?'g-sat2':'g-sat')+'" cx="'+f2(p[0])+'" cy="'+f2(p[1])+'" r="'+f2(sr*s.f)+'"/>';}).join(''));
+  });
+  const c=P.core,core=(GCORE[kind]||GCORE.world)(w,size>=40?c.d:0,c.a);
+  return '<svg width="'+size+'" height="'+size+'" viewBox="0 0 40 40" aria-hidden="true">'+back
+   +'<g transform="translate(20 20) scale('+c.s.toFixed(3)+') translate(-20 -20)">'+core+'</g>'+over+'</svg>';
  }
  function renderGlyph(el){
   const size=+(el.dataset.size||16),seed=el.dataset.seed||el.dataset.name||'';
@@ -271,6 +315,16 @@
   if(el.dataset.name){el.setAttribute('role','img');el.setAttribute('aria-label',el.dataset.name);}else el.setAttribute('aria-hidden','true');
  }
  Astrobox.glyphSVG = glyphSVG;
+ /* development check: pairs of seeds whose glyphs share ring and satellite counts, tilt within 4° and
+    second-ring yaw within 10°; with a kind, also the core detail. Compares the full glyph (40px and up). */
+ Astrobox.auditGlyphs = function (seeds, kind) {
+  const ps = (seeds || []).map(s => [s, glyphParams(fnv(String(s)))]), pairs = [];
+  const near = (a, b) => a.ring2 === b.ring2 && a.sats.length === b.sats.length && Math.abs(a.tilt - b.tilt) < 4
+   && (!a.ring2 || Math.abs(a.yaw2 - b.yaw2) < 10) && (!kind || a.core.d === b.core.d);
+  for (let i = 0; i < ps.length; i++) for (let j = i + 1; j < ps.length; j++) if (near(ps[i][1], ps[j][1])) pairs.push([ps[i][0], ps[j][0]]);
+  if (pairs.length) console.warn('Astrobox: ' + pairs.length + ' near-duplicate glyph pair(s)' + (kind ? ' for ' + kind : '') + '.', pairs);
+  return pairs;
+ };
  /* the FNV-1a hash behind every seeded orbit and glyph */
  Astrobox.hash = fnv;
  Astrobox.glyphs = function (scope) { (scope || document).querySelectorAll('.glyph[data-kind]').forEach(renderGlyph); };
