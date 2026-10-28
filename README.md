@@ -8,7 +8,7 @@ The live element library is at [`docs/library/`](docs/library/index.html).
 ## Quick start (Nuxt)
 
 ```bash
-npm install github:GitVex/astrobox#v1.0.0
+npm install github:GitVex/astrobox#v1.1.0
 ```
 
 ```ts
@@ -17,6 +17,14 @@ export default defineNuxtConfig({ extends: ['astrobox'] })
 ```
 
 Then set `data-voice="mechanical"` or `data-voice="prose"` on each screen.
+
+`github:` installs need `git`. In images without it (for example `node:22-alpine`), depend on the tag's tarball instead:
+
+```json
+"astrobox": "https://codeload.github.com/GitVex/astrobox/tar.gz/refs/tags/v1.1.0"
+```
+
+The layer starts the runtime once hydration finishes and again after each page change. To match the server's number format or let components initialise themselves, set `astrobox.locale` or `astrobox.initOnPageChange` in `app.config.ts` (see [`AGENTS.md`](AGENTS.md#nuxt)).
 
 Other routes:
 

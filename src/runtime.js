@@ -190,7 +190,8 @@
   qty:(v,u)=>mkU('qty',v,{unit:u}),pool:(v,max)=>mkU('pool',v,{max}),range:(a,b,u)=>mkU('range',a,{to:b,unit:u}),
   est:(v,u,source)=>mkU('est',v,{unit:u,source}),delta:(v,u,since)=>mkU('delta',v,{unit:u,since}),hex:c=>mkU('hex',c),bearing:d=>mkU('bearing',d),
   cr:v=>mkU('cr',v),pre:(u,v)=>mkU('pre',v,{unit:u}),dice:d=>mkU('dice',d),time:o=>mkU('time',o.session,{day:o.day,real:o.real}),
-  get locale(){return loc();},set locale(l){fmtState.locale=l||'';Astrobox.hydrate(document);}
+  /* before the first init this only stores the locale, so a framework can set it before anything renders */
+  get locale(){return loc();},set locale(l){fmtState.locale=l||'';if(started)Astrobox.hydrate(document);}
  };
  Astrobox.hydrate = function (scope) { (scope || document).querySelectorAll('data.u').forEach(render); };
  /* register an app-specific unit: label for the tooltip, convert(value) returns the added information */
@@ -262,15 +263,17 @@
 
  /* ---------- segmented controls ---------- */
  function placeInd(seg) { const on = seg.querySelector('button.on'), ind = seg.querySelector('.ind'); if (!on || !ind) return; ind.style.width = on.offsetWidth + 'px'; ind.style.transform = 'translateX(' + on.offsetLeft + 'px)'; }
+ /* data-seg="manual": the app renders .ind and .on and handles clicks; Astrobox only places the indicator */
  function initSeg(scope) {
   scope.querySelectorAll('.seg').forEach(seg => {
+   if (seg.dataset.seg === 'manual') { placeInd(seg); return; }
    if (!seg.querySelector('.ind')) { const i = document.createElement('span'); i.className = 'ind'; seg.prepend(i); }
    if (!seg.querySelector('button.on')) { const b = seg.querySelector('button'); if (b) b.classList.add('on'); }
    if (!seg._abSeg) {
     seg._abSeg = 1;
     seg.addEventListener('click', e => {
      const b = e.target.closest('button'); if (!b || !seg.contains(b)) return;
-     seg.querySelectorAll('button').forEach(x => { x.classList.toggle('on', x === b); x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+     seg.querySelectorAll('button').forEach(x => { x.classList.toggle('on', x === b); x.setAttribute(x.getAttribute('role') === 'radio' ? 'aria-checked' : 'aria-pressed', x === b ? 'true' : 'false'); });
      placeInd(seg);
      seg.dispatchEvent(new CustomEvent('astro:change', { bubbles: true, detail: { value: b.dataset.value != null ? b.dataset.value : b.textContent.trim(), button: b } }));
     });
@@ -378,8 +381,9 @@
  };
 
  /* ---------- init ---------- */
+ let started = false;
  Astrobox.init = function (scope) {
-  scope = scope || document;
+  scope = scope || document; started = true;
   initSeg(scope); initCells(scope); initMedia(scope);
   Astrobox.hydrate(scope); Astrobox.glyphs(scope); Astrobox.redact(scope);
   initOrbits(scope); initAtt(scope); initToc(scope); initFrames(scope); initDrift(scope);

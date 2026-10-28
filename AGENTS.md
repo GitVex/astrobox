@@ -5,7 +5,7 @@ You are building UI with the Astrobox design system. Follow these rules exactly.
 ## Setup
 
 - Load, in this order: `astrobox.tokens.css`, `astrobox.css`, then `astrobox.js` (at the end of `<body>`, or in a client-only plugin).
-- After inserting markup dynamically (route change, list render, modal), call `Astrobox.init(container)`.
+- After inserting markup dynamically (route change, list render, modal), call `Astrobox.init(container)`. In Nuxt, the layer handles the first render and page changes (see Nuxt below).
 - Never copy token values into components. Use the CSS variables.
 - Never write a literal colour, duration or easing in component CSS. Use `--brass`, `--txt`, `--t-settle`, `--ease` and the rest.
 
@@ -128,13 +128,20 @@ You are building UI with the Astrobox design system. Follow these rules exactly.
 | `Astrobox.setMood(el, mood)` | Sets `data-mood`; the orbit redraws and `astro:mood` fires |
 | `Astrobox.count(el, to)` | Counts a `data.u` value or a `.cells` meter to a new number |
 | `Astrobox.fmt.qty(v, unit)`, `.pool`, `.range`, `.est`, `.delta`, `.hex`, `.bearing`, `.cr`, `.pre`, `.dice`, `.time` | Return unit markup as a string |
-| `Astrobox.fmt.locale = 'de-DE'` | Overrides the browser locale |
+| `Astrobox.fmt.locale = 'de-DE'` | Overrides the browser locale. Re-renders units only after the first `init`, so set it before that |
 | `Astrobox.units.register(name, label, convert)` | Adds a unit whose tooltip adds information |
 | `Astrobox.glyphSVG(kind, id, size)` | Returns glyph SVG markup |
 | `Astrobox.redact(scope)`, `Astrobox.hydrate(scope)`, `Astrobox.glyphs(scope)` | Run one part of `init` |
 | `Astrobox.auditOrbits()`, `Astrobox.auditFrames()` | Development checks for the orbit budget and frame nesting |
 
 Events: `astro:change` (segmented control), `astro:select` (attention grid), `astro:mood`, `astro:palette`.
+
+## Nuxt
+
+- Install, then `extends: ['astrobox']`. The package's main entry is the layer; the runtime is `astrobox/astrobox.js`. Where `git` is missing (Alpine images), depend on `https://codeload.github.com/GitVex/astrobox/tar.gz/refs/tags/vX.Y.Z` instead of `github:`.
+- The layer's plugin runs `init(document)` once hydration has finished (`app:suspense:resolve`) and after each later page change. Never call `init` from a plugin hook that runs during hydration.
+- Options go in the app's `app.config.ts`: `astrobox: { locale: 'en-US', initOnPageChange: false }`. Set `locale` to the server's locale so units don't change format after hydration. Turn off `initOnPageChange` when components call `useNuxtApp().$astrobox.init(el)` for what they render.
+- A segmented control that Vue drives (its own `.ind`, `.on`, `role="radio"` and `aria-checked`) takes `data-seg="manual"`. Astrobox then only places the indicator; call `$astrobox.placeIndicator(seg)` after the selection changes.
 
 ## Before you finish
 

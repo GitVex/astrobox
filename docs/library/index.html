@@ -1353,10 +1353,8 @@ Astrobox.count(hullCells, 12);</pre>
 &lt;link rel="stylesheet" href="astrobox.css"&gt;
 &lt;script src="astrobox.js"&gt;&lt;/script&gt;
 
-<span class="c">// Nuxt: plugins/astrobox.client.ts</span>
-import '~/assets/astrobox/astrobox.js'
-export default defineNuxtPlugin(app =&gt;
-  app.hook('page:finish', () =&gt; Astrobox.init(document)))
+<span class="c">// Nuxt: the layer's plugin inits after hydration</span>
+export default defineNuxtConfig({ extends: ['astrobox'] })
 
 <span class="c">// after rendering new markup</span>
 Astrobox.init(container)</pre>

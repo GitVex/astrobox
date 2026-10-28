@@ -1,6 +1,7 @@
-// Astrobox as a Nuxt layer.
-// In an app:  export default defineNuxtConfig({ extends: ['github:GitVex/astrobox#v1.0.0'] })
-// or, after `npm install github:GitVex/astrobox#v1.0.0`:  extends: ['astrobox']
+// Astrobox as a Nuxt layer. The package's main entry ("." in package.json) points here,
+// so after installing it:  export default defineNuxtConfig({ extends: ['astrobox'] })
+// or without installing:   extends: ['github:GitVex/astrobox#v1.1.0']
+// The browser runtime is the separate entry astrobox/astrobox.js.
 import { fileURLToPath } from 'node:url'
 
 const here = (p: string) => fileURLToPath(new URL(p, import.meta.url))

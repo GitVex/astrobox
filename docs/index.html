@@ -96,7 +96,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
  </div>
  <div class="cb quick" aria-label="Quick start">
   <span class="lbl b">Quick start · Nuxt</span>
-  <div class="cmd"><pre class="code"><code>npm install github:YOUR-USER/astrobox#v1.0.0</code></pre><button class="btn q cp" type="button">Copy</button></div>
+  <div class="cmd"><pre class="code"><code>npm install github:YOUR-USER/astrobox#v1.1.0</code></pre><button class="btn q cp" type="button">Copy</button></div>
   <div class="cmd"><pre class="code"><code>// nuxt.config.ts
 export default defineNuxtConfig({
   extends: ['astrobox'],
@@ -140,7 +140,7 @@ export default defineNuxtConfig({
      <div class="xr"><div class="xc"><code>dist/astrobox.css</code></div><div class="xc">All components, inside <code>@layer astrobox</code>, so your own unlayered styles always win.</div></div>
      <div class="xr"><div class="xc"><code>dist/astrobox.js</code></div><div class="xc">The runtime: palette, orbits and moods, glyphs, units and tooltips, redaction, counting, motion, contents rail, brackets.</div></div>
      <div class="xr"><div class="xc"><code>dist/astrobox.tokens.json</code></div><div class="xc">The same tokens in the W3C design-tokens format, for build tools.</div></div>
-     <div class="xr"><div class="xc"><code>nuxt.config.ts</code>, <code>plugins/</code></div><div class="xc">The Nuxt layer: stylesheets, fonts and the client plugin that initialises the runtime on every page.</div></div>
+     <div class="xr"><div class="xc"><code>nuxt.config.ts</code>, <code>app.config.ts</code>, <code>plugins/</code></div><div class="xc">The Nuxt layer: stylesheets, fonts, runtime options and the client plugin that initialises the runtime after hydration and on every page change.</div></div>
      <div class="xr"><div class="xc"><code>GUIDELINES.md</code></div><div class="xc">The design guidelines for people.</div></div>
      <div class="xr"><div class="xc"><code>AGENTS.md</code></div><div class="xc">The same rules for AI coding agents: hard rules, decision tables, snippets, API and checklist.</div></div>
      <div class="xr"><div class="xc"><code>templates/</code></div><div class="xc">A Nuxt starter and a plain HTML example.</div></div>
@@ -164,14 +164,26 @@ cd my-app && npm install && npm run dev</code></pre><button class="btn q cp" typ
 
    <h3 id="new-nuxt">Add to a Nuxt app</h3>
    <ol class="path">
-    <li><span>Install a tagged version: <code>npm install github:YOUR-USER/astrobox#v1.0.0</code>.</span></li>
+    <li><span>Install a tagged version: <code>npm install github:YOUR-USER/astrobox#v1.1.0</code>.</span></li>
     <li><span>Add the layer: <code>extends: ['astrobox']</code> in <code>nuxt.config.ts</code>. This brings the tokens, the components, the fonts and the runtime plugin.</span></li>
     <li><span>Set the voice once per screen, on the outermost element: <code>data-voice="mechanical"</code> or <code>data-voice="prose"</code>.</span></li>
     <li><span>Offer theme and contrast: set <code>data-theme</code> and <code>data-contrast</code> on <code>&lt;html&gt;</code>, or call <code>$astrobox.setTheme()</code> and <code>$astrobox.setContrast()</code>.</span></li>
     <li><span>After rendering Astrobox markup outside a page change, call <code>useNuxtApp().$astrobox.init(el)</code>.</span></li>
    </ol>
    <div class="exit note"><b>Let Astrobox own its elements</b>Render units, meters, glyphs and redaction bars once, then update them through the runtime (<code>$astrobox.count</code>, <code>setMood</code>, <code>init</code>). If Vue re-renders their contents, the formatting is lost.</div>
-   <p>You can also skip the npm step and extend straight from GitHub: <code>extends: ['github:YOUR-USER/astrobox#v1.0.0']</code>.</p>
+   <p>You can also skip the npm step and extend straight from GitHub: <code>extends: ['github:YOUR-USER/astrobox#v1.1.0']</code>.</p>
+   <p><code>github:</code> installs need <code>git</code>, which slim images such as <code>node:22-alpine</code> don't have. There, depend on the tag's tarball instead:</p>
+   <div class="cmd"><pre class="code"><code>"astrobox": "https://codeload.github.com/YOUR-USER/astrobox/tar.gz/refs/tags/v1.1.0"</code></pre><button class="btn q cp" type="button">Copy</button></div>
+   <h3 id="new-nuxt-config">Nuxt runtime options</h3>
+   <p>The layer's plugin starts the runtime once hydration has finished, so Astrobox never rewrites markup Vue is still comparing, and runs it again after each client-side page change. Two options in <code>app.config.ts</code> change that:</p>
+   <div class="cmd"><pre class="code"><code>// app.config.ts
+export default defineAppConfig({
+  astrobox: {
+    locale: 'en-US',          // format units like the server did; '' follows the browser
+    initOnPageChange: false,  // components call $astrobox.init(el) themselves
+  },
+})</code></pre><button class="btn q cp" type="button">Copy</button></div>
+   <p>A segmented control that Vue drives itself takes <code>data-seg="manual"</code>: Astrobox then places its indicator but adds no click handler of its own.</p>
 
    <h3 id="new-other">Vite, Vue, React or plain HTML</h3>
    <div class="cmd"><pre class="code"><code>// with a bundler, after npm install
@@ -179,9 +191,9 @@ import 'astrobox/tokens.css'
 import 'astrobox/astrobox.css'
 import 'astrobox/astrobox.js'   // initialises itself; call Astrobox.init(el) after renders</code></pre><button class="btn q cp" type="button">Copy</button></div>
    <div class="cmd"><pre class="code"><code>&lt;!-- plain HTML, served from the tagged release via jsDelivr --&gt;
-&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/YOUR-USER/astrobox@v1.0.0/dist/astrobox.tokens.css"&gt;
-&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/YOUR-USER/astrobox@v1.0.0/dist/astrobox.css"&gt;
-&lt;script src="https://cdn.jsdelivr.net/gh/YOUR-USER/astrobox@v1.0.0/dist/astrobox.js" defer&gt;&lt;/script&gt;</code></pre><button class="btn q cp" type="button">Copy</button></div>
+&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/YOUR-USER/astrobox@v1.1.0/dist/astrobox.tokens.css"&gt;
+&lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/YOUR-USER/astrobox@v1.1.0/dist/astrobox.css"&gt;
+&lt;script src="https://cdn.jsdelivr.net/gh/YOUR-USER/astrobox@v1.1.0/dist/astrobox.js" defer&gt;&lt;/script&gt;</code></pre><button class="btn q cp" type="button">Copy</button></div>
    <p>jsDelivr only serves public repositories. For a private repo, copy <code>dist/</code> into the app or install it with npm. <code>templates/example.html</code> is a complete page that uses nothing but the package.</p>
   </section>
 
